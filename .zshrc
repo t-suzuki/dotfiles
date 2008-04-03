@@ -25,6 +25,7 @@ else
   unset LC_ALL
   export LC_MESSAGES=C
   export SHELL=/usr/bin/zsh
+  export PATH="$HOME/bin:$PATH"
 fi
 
 if [ -x `which lv` ]; then
@@ -106,6 +107,7 @@ function backup {
 bindkey -e
 bindkey '^[[1~' beginning-of-line # Home
 bindkey '^[[4~' end-of-line # End
+bindkey '^T' kill-word
 bindkey '^U' backward-kill-line
 bindkey '^[[3~' delete-char-or-list # Del
 bindkey '^P' history-beginning-search-backward
