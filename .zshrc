@@ -24,7 +24,7 @@ else
   export LANG=ja_JP.UTF8
   unset LC_ALL
   export LC_MESSAGES=C
-  export SHELL=/usr/bin/zsh
+  export SHELL=`which zsh`
   export PATH="$HOME/bin:$PATH"
 fi
 
@@ -50,8 +50,16 @@ if [ $TERM = "cygwin" ]; then
   alias l='ls --show-control-chars --color=always -FAl'
   export LV='-Os -c'
 else
-  alias ls='ls --color=always -Fh'
-  alias l='ls --color=always -FAlh'
+  case $(uname) in
+  'Linux')
+    alias ls='ls --color=always -Fh'
+    alias l='ls --color=always -FAlh'
+    ;;
+  'FreeBSD')
+    alias ls='ls -Fh'
+    alias l='ls -FAlh'
+    ;;
+  esac
   export LV='-Ou8 -c'
 fi
 alias mv='mv -i'
