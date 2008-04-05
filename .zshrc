@@ -30,14 +30,14 @@ fi
 
 if [ -x `which lv` ]; then
   export PAGER=lv
-elif [ -x `which less`]; then
+elif [ -x `which less` ]; then
   export PAGER=less
 fi
 
 export EDITOR=vim
 
 # C-wで単語の一部と見なす記号
-export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+export WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 
 # svn
 export rep=file:///var/svn/
