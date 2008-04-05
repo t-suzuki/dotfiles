@@ -56,8 +56,9 @@ else
     alias l='ls --color=always -FAlh'
     ;;
   'FreeBSD')
-    alias ls='ls -Fh'
-    alias l='ls -FAlh'
+    alias ls='ls -GFh'
+    alias l='ls -GFAlh'
+    export LSCOLORS='ExfxcxdxBxegedabagacad'
     ;;
   esac
   export LV='-Ou8 -c'
