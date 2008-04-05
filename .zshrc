@@ -176,11 +176,11 @@ function precmd {
   fi
 }
 function prompt {
-  PROMPT=$C_PRE"%S[%n] %~ %s "$1"
+  PROMPT=$C_PRE"%S[%n@%m] %~ %s "$1"
 "$C_PRE"%# "
 }
 prompt ""
-RPROMPT="%S"$C_RIGHT"[%m] %D{%d %a} %*%s"$C_CMD
+RPROMPT="%S"$C_RIGHT" %D{%d %a} %* %s"$C_CMD
 POSTEDIT=`echotc se`
 setopt prompt_subst # 色
 unsetopt promptcr
