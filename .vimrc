@@ -1,4 +1,12 @@
 " ------------------------------------------------------------
+" gVimのメニュー文字化け対策
+if has('unix') && has('gui')
+  source $VIMRUNTIME/delmenu.vim
+  set langmenu=menu_ja_jp.utf-8.vim
+  source $VIMRUNTIME/menu.vim
+endif
+
+" ------------------------------------------------------------
 " 色設定
 
 syntax on
