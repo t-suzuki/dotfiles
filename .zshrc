@@ -21,7 +21,7 @@ if [ $TERM = "cygwin" ]; then
   export PATH="/java/jdk1.6.0_03/bin:$PATH"
   export PATH="/cygdrive/f/app/prog/ghc/bin:$PATH"
 else
-  export LANG=ja_JP.UTF8
+  export LANG=ja_JP.UTF-8
   unset LC_ALL
   export LC_MESSAGES=C
   export SHELL=`which zsh`
@@ -34,7 +34,9 @@ elif [ -x `which less` ]; then
   export PAGER=less
 fi
 
-export EDITOR=vim
+if [ -x `which vim` ]; then
+  export EDITOR=vim
+fi
 
 # C-wで単語の一部と見なす記号
 export WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
@@ -80,8 +82,11 @@ alias a='./a.out'
 alias m='make'
 alias -g F='| grep -i'
 alias -g GG='| xargs -0 grep -i'
-alias -g G='| grep -i'
-alias -g L='| lv'
+alias -g G='2>&1 | grep -i'
+alias -g L='2>&1 | lv'
+# short commands
+alias lsl='ls -al'
+alias psp='ps -F ax'
 
 # ----------------------------------------
 # functions

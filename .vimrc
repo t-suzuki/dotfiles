@@ -60,13 +60,21 @@ set fenc=utf-8
 set browsedir=current
 set shellslash
 
+" omni complete
+"-----------------------------------------------------------
+hi Pmenu guibg=#666666
+hi PmenuSel guibg=#8cd0d3 guifg=#666666
+hi PmenuSbar guibg=#333333
+
+" noh
+nmap <ESC><ESC> :noh<CR>
+
 " insert CR
 nnoremap <C-J> o<ESC>
 
 " buffer next/prev
 "-----------------------------------------------------------
 nnoremap <C-N> :bn<CR>
-nnoremap <Tab> :bn<CR>
 nnoremap <C-P> :bp<CR>
 nnoremap <S-Tab> :bp<CR>
 
