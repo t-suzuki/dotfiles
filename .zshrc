@@ -1,5 +1,9 @@
-# .zshrc written by t for 4.3.4 in 20071122
+# .zshrc written by tomato for zsh 4.3.4
 # vim:enc=utf8:
+# 
+# history:
+#   20090404: psg追加, cd, gd等修正
+#   20071122
 
 # ----------------------------------------
 # add below to ~/.bash_profile:
@@ -83,21 +87,36 @@ alias m='make'
 alias -g F='| grep -i'
 alias -g GG='| xargs -0 grep -i'
 alias -g G='2>&1 | grep -i'
-alias -g L='2>&1 | lv'
+alias -g L="2>&1 | $PAGER"
+alias T='tail -n 50 -f'
 # short commands
-alias lsl='ls -al'
+alias lsl='ls -ali'
 alias psp='ps -F ax'
 
 # ----------------------------------------
 # functions
-function cd { builtin cd $@ ; ls }
+function cd { builtin cd $@ && ls }
 function gd {
+  # usage: gd 2
+  # usage: gd (prompt..)
+  if [ "$#" -ge 1 ]; then cd +"$1"; return ; fi
   dirs -v
   echo -n "select: "
   read nd
   if [ "$nd" != "" ]; then
     cd +"$nd"
   fi
+}
+function psg {
+  # ps aux | grep ... but do not include ps nor grep
+  HEAD=$(ps aux | head -n 1) # header
+  COMMANDPOS=$(echo $HEAD | sed -r 's@COMMAND$@@' | wc -m) # where 'COMMAND' begins
+  COMMANDPOS=$(($COMMANDPOS-1))
+  ps aux | while read LINE; do
+    echo $LINE | grep -v -E "^.{${COMMANDPOS}}"'(ps aux|grep)' >/dev/null # not ps|grep
+    if [ "$?" -ne 0 ]; then continue; fi
+    echo $LINE | grep $*
+  done
 }
 function backup_dot_files {
   tar jcvf ~/'dotfiles_'`date +%Y%m%d`'.tar.bz2' ~/.vimrc ~/.zshrc /cygdrive/f/app/editor/gvim/{_vimrc,_gvimrc,vimrc,gvimrc,vimrc_local.vim,gvimrc_local.vim}
@@ -130,8 +149,8 @@ bindkey '^N' history-beginning-search-forward
 # ----------------------------------------
 # history
 HISTFILE=~/.zsh_history
-HISTSIZE=20000
-SAVEHIST=20000
+HISTSIZE=50000
+SAVEHIST=50000
 setopt appendhistory
 setopt histignorealldups
 setopt histnofunctions
@@ -212,7 +231,7 @@ setopt numericglobsort # 数字展開は数値順
 setopt autoparamkeys # 補完後の:,)を削除
 fignore=(.o .swp) # 補完で無視する
 
-# ssh
+# ssh なんだかこれは使えない様だ
 function print_known_hosts() {
   if [ -f $HOME/.ssh/known_hosts ]; then
     cat $HOME/.ssh/known_hosts | tr ',' ' ' | cut -d' ' -f1
