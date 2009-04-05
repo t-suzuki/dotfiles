@@ -92,6 +92,8 @@ alias T='tail -n 50 -f'
 # short commands
 alias lsl='ls -ali'
 alias psp='ps -F ax'
+# ssh-agent wrapper
+test -x lazy-ssh-agent && eval `lazy-ssh-agent setup ssh scp sftp`
 
 # ----------------------------------------
 # functions
