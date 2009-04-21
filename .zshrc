@@ -93,7 +93,7 @@ alias T='tail -n 50 -f'
 alias lsl='ls -ali'
 alias psp='ps -F ax'
 # ssh-agent wrapper
-test -x lazy-ssh-agent && eval `lazy-ssh-agent setup ssh scp sftp`
+test -x "$(which lazy-ssh-agent)" && eval `lazy-ssh-agent setup ssh scp sftp`
 
 # ----------------------------------------
 # functions
@@ -188,10 +188,12 @@ if [ $TERM = "cygwin" ]; then
   # for Cygwin (ps 1.11)
   function joblist { ps|awk '/^S/{print gensub(/^.*\/(.*?)$/,"\\1", "", $9);}'|sed ':a;$!N;$!b a;;s/\n/,/g' }
   function jobnum { ps|awk '/^S/{print}'|wc -l}
+  function ipaddrs { ipconfig | grep 'IP Address' | sed 's/\. //g;s/.*: //g' | grep -v 127.0.0.1 | sed ':a;$!N;$!b a;;s/\n/, /g' }
 else
   # for Linux (procps 3.2.6)
   function joblist { ps -l|awk '/^..T/&&NR!=1{print $14}'|sed ':a;$!N;$!b a;;s/\n/,/g' }
   function jobnum { ps -l|awk '/^..T/&&NR!=1{print}'|wc -l}
+  function ipaddrs { /sbin/ifconfig | awk '/^ *inet addr:/{print $2}' | cut -d: -f2 | grep -v 127.0.0.1 | sed ':a;$!N;$!b a;;s/\n/, /g' }
 fi
 function precmd {
   local jn=$(jobnum)

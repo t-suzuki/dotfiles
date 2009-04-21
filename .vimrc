@@ -9,18 +9,19 @@ colorscheme ron
 highlight Folded ctermfg=blue
 highlight SpecialKey cterm=underline ctermfg=darkgrey guifg=darkcyan
 
-highlight Cursor ctermbg=darkyellow guibg=darkyellow
-highlight CursorIM ctermbg=red guibg=red
+"highlight Cursor ctermbg=darkyellow guibg=darkyellow
+"highlight CursorIM ctermbg=red guibg=red
 
 " カレントウィンドウにのみ罫線を引く
-augroup cch
-  autocmd! cch
-  autocmd WinLeave * set nocursorcolumn nocursorline
-  autocmd WinEnter,BufRead * set cursorcolumn cursorline
-augroup END
-
-highlight CursorLine ctermbg=black guibg=black
-highlight CursorColumn ctermbg=black guibg=black
+" 特にPHPで重いのでコメントアウト
+"augroup cch
+"  autocmd! cch
+"  autocmd WinLeave * set nocursorcolumn nocursorline
+"  autocmd WinEnter,BufRead * set cursorcolumn cursorline
+"augroup END
+"
+"highlight CursorLine ctermbg=black guibg=black
+"highlight CursorColumn ctermbg=black guibg=black
 
 " tab
 "----------------------------------------------------------
@@ -68,9 +69,28 @@ hi PmenuSbar guibg=#333333
 
 " noh
 nmap <ESC><ESC> :noh<CR>
+cmap <ESC><ESC> <C-C>:noh<CR>
 
 " insert CR
 nnoremap <C-J> o<ESC>
+nnoremap <CR> o<ESC>
+nnoremap <S-CR> O<ESC>
+
+" save if updated on double Leader
+noremap <Leader><Leader> :up<CR>
+
+" up/down
+nnoremap <Space> jzz
+nnoremap <S-Space> kzz
+
+" select to line end
+vnoremap v $h
+
+" yank to line end
+nnoremap Y y$
+
+" exit!
+nnoremap QQ :qa!<CR>
 
 " buffer next/prev
 "-----------------------------------------------------------
@@ -80,13 +100,13 @@ nnoremap <S-Tab> :bp<CR>
 
 " tab
 "-----------------------------------------------------------
-nnoremap <C-K><C-N> :tabnew<CR>
-
-nnoremap <C-K>c :tabclose<CR>
+nnoremap <C-K>c :tabnew<CR>
+nnoremap <C-K>d :tabclose<CR>
 nnoremap <C-K>o :tabonly<CR>
 
 nnoremap <C-K><C-P> gT
 nnoremap <C-K>h gT
+nnoremap <C-K><C-N> gt
 nnoremap <C-K><C-K> gt
 nnoremap <C-K>l gt
 nnoremap <C-Tab> gt
@@ -97,3 +117,4 @@ cmap <C-A> <Home>
 cmap <C-E> <End>
 cmap <C-F> <Right>
 cmap <C-B> <Left>
+
