@@ -74,23 +74,20 @@ cmap <ESC><ESC> <C-C>:noh<CR>
 " insert CR
 nnoremap <C-J> o<ESC>
 nnoremap <CR> o<ESC>
-nnoremap <S-CR> O<ESC>
 
 " save if updated on double Leader
 noremap <Leader><Leader> :up<CR>
 
 " up/down
-nnoremap <Space> jzz
-nnoremap <S-Space> kzz
+nnoremap <C-Y> jzz
+nnoremap <C-E> kzz
 
-" select to line end
+" select/yank to line end
 vnoremap v $h
-
-" yank to line end
 nnoremap Y y$
 
-" exit!
-nnoremap QQ :qa!<CR>
+" exit
+nnoremap QQ :qa<CR>
 
 " buffer next/prev
 "-----------------------------------------------------------
@@ -102,7 +99,9 @@ nnoremap <S-Tab> :bp<CR>
 "-----------------------------------------------------------
 nnoremap <C-K>c :tabnew<CR>
 nnoremap <C-K>d :tabclose<CR>
+nnoremap <C-K><C-D> :tabclose<CR>
 nnoremap <C-K>o :tabonly<CR>
+nnoremap <C-K><C-O> :tabonly<CR>
 
 nnoremap <C-K><C-P> gT
 nnoremap <C-K>h gT
