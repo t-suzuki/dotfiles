@@ -1,12 +1,14 @@
-# .zshrc written by tomato for zsh 4.3.4
+# .zshrc written for 4.3.4 since 20071122
 # vim:enc=utf8:
-# 
+#
 # history:
+#   20090606: 統合
 #   20090404: psg追加, cd, gd等修正
 #   20071122
 
 # ----------------------------------------
-# add below to ~/.bash_profile:
+# add below to ~/.bash_profile (exec zsh on login)
+#        or to ~/.bashrc       (exec zsh for all bash)
 #
 # if [ -x /usr/bin/zsh ]; then
 #   echo 'exec zsh'
@@ -15,6 +17,12 @@
 #   echo 'exec zsh failed.'
 # fi
 #
+
+# exists?
+function exists() {
+  which "$1" 1>/dev/null 2>&1
+  if [ $? -eq 0 ]; then echo "0"; else echo ""; fi
+}
 
 # ----------------------------------------
 # env
@@ -32,15 +40,13 @@ else
   export PATH="$HOME/bin:$PATH"
 fi
 
-if [ -x `which lv` ]; then
+if [ -n "$(exists lv)" ]; then
   export PAGER=lv
-elif [ -x `which less` ]; then
+elif [ -n "$(exists less)" ]; then
   export PAGER=less
 fi
 
-if [ -x `which vim` ]; then
-  export EDITOR=vim
-fi
+export EDITOR=vim
 
 # C-wで単語の一部と見なす記号
 export WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
@@ -81,19 +87,19 @@ alias ....='cd ....'
 alias -g ...='../../'
 alias -g ....='../../../'
 alias -g .....='../../../../'
-alias x='exit'
-alias a='./a.out'
-alias m='make'
+alias man='man'
+alias jman="LC_MESSAGES=$LANG man"
 alias -g F='| grep -i'
 alias -g GG='| xargs -0 grep -i'
-alias -g G='2>&1 | grep -i'
-alias -g L="2>&1 | $PAGER"
+alias -g G=' 2>&1 | grep -i'
+alias -g L=" 2>&1 | $PAGER"
 alias T='tail -n 50 -f'
 # short commands
 alias lsl='ls -ali'
 alias psp='ps -F ax'
 # ssh-agent wrapper
-test -x "$(which lazy-ssh-agent)" && eval `lazy-ssh-agent setup ssh scp sftp`
+test -n "$(exists lazy-ssh-agent)" && eval `lazy-ssh-agent setup ssh scp sftp`
+
 
 # ----------------------------------------
 # functions
@@ -109,6 +115,7 @@ function gd {
     cd +"$nd"
   fi
 }
+
 function psg {
   # ps aux | grep ... but do not include ps nor grep
   HEAD=$(ps aux | head -n 1) # header
@@ -120,20 +127,14 @@ function psg {
     echo $LINE | grep $*
   done
 }
-function backup_dot_files {
-  tar jcvf ~/'dotfiles_'`date +%Y%m%d`'.tar.bz2' ~/.vimrc ~/.zshrc /cygdrive/f/app/editor/gvim/{_vimrc,_gvimrc,vimrc,gvimrc,vimrc_local.vim,gvimrc_local.vim}
-}
-function ff {
-  /cygdrive/f/app/internet/firefox/firefox $1 &
-}
 
 function backup {
   D=`pwd|sed -r 's/^.*\/(.*?)$/\1/'`
   F=${D}_`date +%Y%m%d_%H%M`.tar.gz
-  make clean
-  cd ..
+  if [ -f 'Makefile' ]; then make clean; fi
+  builtin cd ..
   tar zcvf ${F} $D
-  cd -
+  builtin cd -
   echo "saved: ${F}"
 }
 
@@ -233,9 +234,9 @@ setopt extendedglob # 展開で^とか使う
 setopt numericglobsort # 数字展開は数値順
 
 setopt autoparamkeys # 補完後の:,)を削除
-fignore=(.o .swp) # 補完で無視する
+fignore=(.o .swp lost+found) # 補完で無視する
 
-# ssh なんだかこれは使えない様だ
+# ssh
 function print_known_hosts() {
   if [ -f $HOME/.ssh/known_hosts ]; then
     cat $HOME/.ssh/known_hosts | tr ',' ' ' | cut -d' ' -f1
@@ -252,4 +253,5 @@ compctl -g '*(-/)' cd
 compctl -b bindkey
 compdef -d java
 
-_cache_hosts=(localhost $HOST 192.168.2.111 hs.utsurigi.net)
+_cache_hosts=(localhost $HOST)
+
