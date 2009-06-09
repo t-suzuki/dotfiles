@@ -98,16 +98,23 @@ alias -g G=' 2>&1 | grep -i'
 alias -g L=" 2>&1 | $PAGER"
 alias T='tail -n 50 -f'
 # short commands
-alias lsl='ls -ali'
 alias psp='ps -F ax'
 # ssh-agent wrapper
 test -n "$(exists lazy-ssh-agent)" && eval `lazy-ssh-agent setup ssh scp sftp`
 
 
 # ----------------------------------------
-# functions
+# colors
 autoload -U colors
 colors
+
+# ----------------------------------------
+# functions
+function ll {
+  # super list
+  l "$@" | $PAGER
+}
+
 function cd {
   builtin cd $@
   if [ "$?" -eq 0 ]; then
@@ -174,6 +181,21 @@ bindkey '^U' backward-kill-line
 bindkey '^[[3~' delete-char-or-list # Del
 bindkey '^P' history-beginning-search-backward
 bindkey '^N' history-beginning-search-forward
+# directory up/back on Ctrl-6
+function cdup() {
+  echo
+  cd ..
+  zle reset-prompt
+}
+zle -N cdup
+bindkey '^\^' cdup
+
+# hjkl on completion
+zmodload -i zsh/complist # -i: ignore errors (on duplicate load)
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
 
 # ----------------------------------------
 # history
@@ -199,18 +221,12 @@ setopt noflowcontrol # C-S C-Q
 
 # ----------------------------------------
 # hooks
-function chpwd() {
-  print -Pn "\e]2;%~ [%m]\a"
-}
+#function chpwd() {
+#  print -Pn "\e]2;%~ [%m]\a"
+#}
 
 # ----------------------------------------
 # prompt
-autoload -U colors
-colors
-local C_PRE="%{$fg[cyan]%}"
-local C_CMD="%{$reset_color%}%{$fg[white]%}"
-local C_RIGHT="%{$bg[black]%}%{$fg[white]%}"
-local C_DEFAULT="%{$reset_color%}"
 if [ $TERM = "cygwin" ]; then
   # for Cygwin (ps 1.11)
   function joblist { ps|awk '/^S/{print gensub(/^.*\/(.*?)$/,"\\1", "", $9);}'|sed ':a;$!N;$!b a;;s/\n/,/g' }
@@ -230,14 +246,29 @@ function precmd {
     prompt ''
   fi
 }
+# control sequences for zsh prompt: n lines down, then n lines up
 function prompt {
-  PROMPT=$C_PRE"%S[%n@%m] %~ %s "$1"
-"$C_PRE"%# "
+  if [ $UID -eq 0 ]; then
+    local C_USERHOST="%{$bg[white]$fg[magenta]%}"
+    local C_PROMPT="%{$fg[magenta]%}"
+  else
+    local C_USERHOST="%{$bg[black]$fg[cyan]%}"
+    local C_PROMPT="%{$fg[cyan]%}"
+  fi
+  local C_PRE="%{$reset_color%}%{$fg[cyan]%}"
+  local C_CMD="%{$reset_color%}%{$fg[white]%}"
+  local C_RIGHT="%{$bg[black]%}%{$fg[white]%}"
+  local C_DEFAULT="%{$reset_color%}"
+  PROMPT=$C_USERHOST"%S[%n@%m] %~ %s$C_PRE "$1"
+"$C_PROMPT"%# "$C_CMD
+  RPROMPT="%S"$C_RIGHT" %D{%d %a} %* %s"$C_CMD
+  # a few blank lines at the bottom
+  echo -n -e "\n\n\n\033[3A"
 }
+
 prompt ""
-RPROMPT="%S"$C_RIGHT" %D{%d %a} %* %s"$C_CMD
 POSTEDIT=`echotc se`
-setopt prompt_subst # 色
+setopt prompt_subst # use colors in prompt
 unsetopt promptcr
 
 # ----------------------------------------
@@ -245,19 +276,21 @@ unsetopt promptcr
 autoload -U compinit
 compinit -u
 
+export LISTMAX=20
 # ls, colors in completion
 export LS_COLORS='di=1;34:ln=35:so=32:pi=33:ex=1;31:bd=46;34:cd=43;34:su=41;30:tw=42;30:ow=43;30'
-#zstyle ':completion:*' list-colors 'di=1;34' 'ln=35' 'so=32' 'ex=1;31' 'bd=46;34'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 zstyle ':completion:*:default' menu select=1 # C-P/C-N
 setopt nolistbeep # 曖昧補完でビープしない
 setopt autolist # 補完時にリスト表示
+#setopt listpacked # compact list on completion # 不安定?
 setopt listtypes
 unsetopt menucomplete # 最初から候補を循環する
 setopt automenu # 共通部分を補完しそれ以外を循環する準備
 setopt extendedglob # 展開で^とか使う
 setopt numericglobsort # 数字展開は数値順
+#setopt magicequalsubst # completion after '=' # 不安定?
 
 setopt autoparamkeys # 補完後の:,)を削除
 fignore=(.o .swp lost+found) # 補完で無視する
