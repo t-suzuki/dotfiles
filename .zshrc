@@ -1,7 +1,9 @@
 # .zshrc written for 4.3.4 since 20071122
+#
 # vim:enc=utf8:
 #
 # history:
+#   20090609: cd後のlsでファイル数が多すぎる場合に省略
 #   20090606: 統合
 #   20090404: psg追加, cd, gd等修正
 #   20071122
@@ -77,6 +79,7 @@ else
 fi
 alias mv='mv -i'
 alias quit='exit'
+alias ':q'='exit'
 alias w3m='w3m -O ja_JP.UTF-8'
 # for function cd
 alias ~='cd ~'
@@ -103,7 +106,30 @@ test -n "$(exists lazy-ssh-agent)" && eval `lazy-ssh-agent setup ssh scp sftp`
 
 # ----------------------------------------
 # functions
-function cd { builtin cd $@ && ls }
+autoload -U colors
+colors
+function cd {
+  builtin cd $@
+  if [ "$?" -eq 0 ]; then
+    lscdmax=40
+    rawls=/bin/ls
+    nfiles=$($rawls|wc|awk '{print $1}')
+    if [ $nfiles -eq 0 ]; then
+      nfiles=$($rawls -A|wc|awk '{print $1}')
+      if [ $nfiles -eq 0 ]; then
+        echo "$fg[yellow]no files in: $(pwd)$reset_color"
+      else
+        echo "$fg[yellow]only hidden files in: $(pwd)$reset_color"
+        ls -A
+      fi
+    elif [ $lscdmax -ge $nfiles ]; then
+      ls
+    else
+      echo "$fg[yellow]$nfiles files in: $(pwd)$reset_color"
+    fi
+  fi
+}
+
 function gd {
   # usage: gd 2
   # usage: gd (prompt..)
