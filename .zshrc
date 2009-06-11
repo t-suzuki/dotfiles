@@ -124,9 +124,9 @@ function cd {
   if [ "$?" -eq 0 ]; then
     lscdmax=40
     rawls=/bin/ls
-    nfiles=$($rawls|wc|awk '{print $1}')
+    nfiles=$($rawls|wc -l)
     if [ $nfiles -eq 0 ]; then
-      nfiles=$($rawls -A|wc|awk '{print $1}')
+      nfiles=$($rawls -A|wc -l)
       if [ $nfiles -eq 0 ]; then
         echo "$fg[yellow]no files in: $(pwd)$reset_color"
       else
