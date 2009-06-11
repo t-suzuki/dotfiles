@@ -81,6 +81,10 @@ alias mv='mv -i'
 alias quit='exit'
 alias ':q'='exit'
 alias w3m='w3m -O ja_JP.UTF-8'
+if [ -n "$(exists trash)" ]; then
+  alias go='trash'
+  list-trash
+fi
 # for function cd
 alias ~='cd ~'
 alias ..='cd ..'
@@ -252,7 +256,7 @@ function prompt {
     local C_USERHOST="%{$bg[white]$fg[magenta]%}"
     local C_PROMPT="%{$fg[magenta]%}"
   else
-    local C_USERHOST="%{$bg[black]$fg[cyan]%}"
+    local C_USERHOST="%{$fg[cyan]%}"
     local C_PROMPT="%{$fg[cyan]%}"
   fi
   local C_PRE="%{$reset_color%}%{$fg[cyan]%}"
