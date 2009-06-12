@@ -3,6 +3,7 @@
 # vim:enc=utf8:
 #
 # history:
+#   20090612: バッファが空の状態でEnter入力でls, ^Oでcd -
 #   20090609: cd後のlsでファイル数が多すぎる場合に省略
 #   20090606: 統合
 #   20090404: psg追加, cd, gd等修正
@@ -123,11 +124,8 @@ function cd {
   builtin cd $@
   if [ "$?" -eq 0 ]; then
     lscdmax=40
-    rawls=/bin/ls
-    nfiles=$($rawls|wc -l)
-    if [ $nfiles -eq 0 ]; then
-      nfiles=$($rawls -A|wc -l)
-      if [ $nfiles -eq 0 ]; then
+    if [ "$(/bin/ls|wc -l)" -eq 0 ]; then
+      if [ "$(/bin/ls -A|wc -l)" -eq 0 ]; then
         echo "$fg[yellow]no files in: $(pwd)$reset_color"
       else
         echo "$fg[yellow]only hidden files in: $(pwd)$reset_color"
@@ -185,14 +183,54 @@ bindkey '^U' backward-kill-line
 bindkey '^[[3~' delete-char-or-list # Del
 bindkey '^P' history-beginning-search-backward
 bindkey '^N' history-beginning-search-forward
-# directory up/back on Ctrl-6
+# directory up on Ctrl-6
 function cdup() {
   echo
   cd ..
+  echo
   zle reset-prompt
 }
 zle -N cdup
 bindkey '^\^' cdup
+
+# directory back on Ctrl-O
+function cdback() {
+  if [ "$(printf '%d' "$BUFFER")" = "$BUFFER" ]; then
+    # back N level (reset)
+    echo
+    builtin cd +$BUFFER
+    echo
+    BUFFER=''
+    zle reset-prompt
+  else
+    # back 1 level (inline)
+    echo
+    builtin cd -
+    echo
+    zle reset-prompt
+  fi
+}
+zle -N cdback
+bindkey '^O' cdback
+
+# ls on single Enter
+function lsoraccept() {
+  if [ -z "$BUFFER" ]; then
+    echo
+    if [ $(/bin/ls|wc -l) -eq 0 ]; then
+      ls -AF --color=always
+    else
+      ls -F --color=always
+    fi
+    echo
+    zle reset-prompt
+  else
+    zle accept-line
+    zle reset-prompt
+  fi
+}
+zle -N lsoraccept
+bindkey '^M' lsoraccept
 
 # hjkl on completion
 zmodload -i zsh/complist # -i: ignore errors (on duplicate load)
@@ -200,6 +238,12 @@ bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
+
+# smart insert last word
+autoload smart-insert-last-word
+zle -N insert-last-word smart-insert-last-word
+zstyle :insert-last-word match '*([^[:space]][[:alpha]/\\]|[[:alpha:]/\\][^[:space:]])*'
+bindkey '^]' insert-last-word
 
 # ----------------------------------------
 # history
