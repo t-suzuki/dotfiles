@@ -3,7 +3,7 @@
 # vim:enc=utf8:
 #
 # history:
-#   20090613: 微修正, bashなどのPATH設定を流用する
+#   20090613: 微修正, bashなどのPATH設定を流用する, コマンド実行中にタイトルに'(*)'挿入
 #   20090612: バッファが空の状態でEnter入力でls, ^Oでcd -
 #   20090609: cd後のlsでファイル数が多すぎる場合に省略
 #   20090606: 統合
@@ -96,6 +96,7 @@ alias mv='mv -i'
 alias quit='exit'
 alias ':q'='exit'
 alias w3m='w3m -O ja_JP.UTF-8'
+# 'go'mi = trash (apt-get install trash-cli)
 if exists trash; then
   alias go='trash'
   list-trash
@@ -115,6 +116,7 @@ alias -g F='| grep -i'
 alias -g GG='| xargs -0 grep -i'
 alias -g G=' 2>&1 | grep -i'
 alias -g L=" 2>&1 | $PAGER"
+alias -g V=" 2>&1 | vim -R -"
 alias T='tail -n 50 -f'
 # short commands
 alias psp='ps -F ax'
@@ -260,6 +262,22 @@ zle -N insert-last-word smart-insert-last-word
 zstyle :insert-last-word match '*([^[:space]][[:alpha]/\\]|[[:alpha:]/\\][^[:space:]])*'
 bindkey '^]' insert-last-word
 
+# quote previous word in single or double quote
+autoload -U modify-current-argument
+_quote-previous-word-in-single() {
+  modify-current-argument '${(qq)${(Q)ARG}}'
+    zle vi-forward-blank-word
+}
+zle -N _quote-previous-word-in-single
+bindkey '^[s' _quote-previous-word-in-single
+
+_quote-previous-word-in-double() {
+  modify-current-argument '${(qqq)${(Q)ARG}}'
+    zle vi-forward-blank-word
+}
+zle -N _quote-previous-word-in-double
+bindkey '^[d' _quote-previous-word-in-double
+
 # ----------------------------------------
 # history
 HISTFILE=~/.zsh_history
@@ -277,16 +295,22 @@ setopt share_history
 setopt noclobber # 存在するファイルにリダイレクトしない
 setopt autocd
 setopt autopushd
-setopt pushdignoredups
+unsetopt pushdignoredups # for 'Ctrl-O' historical cd
 setopt ignoreeof # C-Dでログアウトしない
 setopt print_eightbit # multibyte characters
-setopt noflowcontrol # C-S C-Q
+setopt noflowcontrol # no C-S C-Q
 
 # ----------------------------------------
-# hooks
-#function chpwd() {
-#  print -Pn "\e]2;%~ [%m]\a"
-#}
+# insert '(*)' into the head of window title while a command is running
+# in job: "(*) path [name@host]"
+# finish: "path [name@host]"
+function precmd_title { #function chpwd {
+  # called in precmd
+  print -Pn "\e]2;%~ [%n@%m]\a"
+}
+function preexec {
+  print -Pn "\e]2;(*)%~ [%n@%m]\a"
+}
 
 # ----------------------------------------
 # prompt
@@ -308,6 +332,7 @@ function precmd {
   else
     prompt ''
   fi
+  precmd_title
 }
 # control sequences for zsh prompt: n lines down, then n lines up
 function prompt {
@@ -325,7 +350,7 @@ function prompt {
   PROMPT=$C_USERHOST"%S[%n@%m] %~ %s$C_PRE "$1"
 "$C_PROMPT"%# "$C_CMD
   RPROMPT="%S"$C_RIGHT" %D{%d %a} %* %s"$C_CMD
-  # a few blank lines at the bottom
+  # keep a few blank lines at the bottom
   echo -n -e "\n\n\n\033[3A"
 }
 
@@ -343,8 +368,8 @@ export LISTMAX=20
 # ls, colors in completion
 export LS_COLORS='di=1;34:ln=35:so=32:pi=33:ex=1;31:bd=46;34:cd=43;34:su=41;30:tw=42;30:ow=43;30'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
 zstyle ':completion:*:default' menu select=1 # C-P/C-N
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' # match upper case from lower case
 setopt nolistbeep # 曖昧補完でビープしない
 setopt autolist # 補完時にリスト表示
 #setopt listpacked # compact list on completion # 不安定?
