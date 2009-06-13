@@ -3,6 +3,7 @@
 # vim:enc=utf8:
 #
 # history:
+#   20090613: 微修正, bashなどのPATH設定を流用する
 #   20090612: バッファが空の状態でEnter入力でls, ^Oでcd -
 #   20090609: cd後のlsでファイル数が多すぎる場合に省略
 #   20090606: 統合
@@ -23,9 +24,22 @@
 
 # exists?
 function exists() {
-  which "$1" 1>/dev/null 2>&1
-  if [ $? -eq 0 ]; then echo "0"; else echo ""; fi
+  if which "$1" 1>/dev/null 2>&1; then return 0; else return 1; fi
 }
+
+# ----------------------------------------
+# import PATH from other shell's rc files
+local paths=':'
+local exports=':'
+PATH=/bin:/usr/bin:/usr/local/bin
+for rcfile in ~/.profile ~/.bashrc ~/.bash_profile; do
+  if [ -r $rcfile ]; then
+    paths="$paths; $(sed '/^[[:space:]]*PATH=/{s/^[[:space:]]*//;s/$/; /;p};d' $rcfile)"
+    exports="$exports; $(sed '/^[[:space:]]*export PATH/{s/^[[:space:]]*//;s/$/; /;p};d' $rcfile)"
+  fi
+done
+eval $paths
+eval $exports
 
 # ----------------------------------------
 # env
@@ -43,9 +57,9 @@ else
   export PATH="$HOME/bin:$PATH"
 fi
 
-if [ -n "$(exists lv)" ]; then
+if exists lv; then
   export PAGER=lv
-elif [ -n "$(exists less)" ]; then
+elif exists less; then
   export PAGER=less
 fi
 
@@ -82,7 +96,7 @@ alias mv='mv -i'
 alias quit='exit'
 alias ':q'='exit'
 alias w3m='w3m -O ja_JP.UTF-8'
-if [ -n "$(exists trash)" ]; then
+if exists trash; then
   alias go='trash'
   list-trash
 fi
@@ -105,7 +119,7 @@ alias T='tail -n 50 -f'
 # short commands
 alias psp='ps -F ax'
 # ssh-agent wrapper
-test -n "$(exists lazy-ssh-agent)" && eval `lazy-ssh-agent setup ssh scp sftp`
+exists lazy-ssh-agent && eval `lazy-ssh-agent setup ssh scp sftp`
 
 
 # ----------------------------------------
@@ -124,7 +138,8 @@ function cd {
   builtin cd $@
   if [ "$?" -eq 0 ]; then
     lscdmax=40
-    if [ "$(/bin/ls|wc -l)" -eq 0 ]; then
+    nfiles=$(/bin/ls|wc -l)
+    if [ $nfiles -eq 0 ]; then
       if [ "$(/bin/ls -A|wc -l)" -eq 0 ]; then
         echo "$fg[yellow]no files in: $(pwd)$reset_color"
       else
