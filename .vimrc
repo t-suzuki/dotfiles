@@ -25,26 +25,25 @@ highlight SpecialKey cterm=underline ctermfg=darkgrey guifg=darkcyan
 
 " tab
 "----------------------------------------------------------
-set ts=2 sw=2
-set softtabstop=2
-set expandtab
-set listchars=tab:>-,eol:$,trail:*
-set list
-autocmd FileType python set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab nocindent
+set et ts=2 sw=2 sts=2
+set list listchars=tab:>-,eol:$,trail:*
+autocmd FileType python set ts=4 sts=4 sw=4 noet noci
 
 " edit
 "-----------------------------------------------------------
 set autoindent
 set cindent
 set backspace=indent,eol,start
-set showmatch
+set showmatch " show matching parentheses
 set wildmenu
 set formatoptions+=mM
-set ambiwidth=double
+set ambiwidth=double " for UTF-8 kigou
 
+" use mouse in terminal
 set mouse=a
 set ttymouse=xterm2
 
+" highlight, incremental
 set hlsearch
 set incsearch
 
@@ -61,15 +60,28 @@ set fenc=utf-8
 set browsedir=current
 set shellslash
 
+set scrolloff=5
+
+" 画面最下行の行を出来るだけ表示
+set display=lastline
+
 " omni complete
 "-----------------------------------------------------------
 hi Pmenu guibg=#666666
 hi PmenuSel guibg=#8cd0d3 guifg=#666666
 hi PmenuSbar guibg=#333333
 
-" noh
+"-----------------------------------------------------------
+" keymaps
+"-----------------------------------------------------------
+
+" ========================= normal mode
+" noh on ESCs
 nmap <ESC><ESC> :noh<CR>
-cmap <ESC><ESC> <C-C>:noh<CR>
+
+" graphical j/k (dangerous for scripts)
+"nnoremap j gj
+"nnoremap k gk
 
 " insert CR
 nnoremap <C-J> o<ESC>
@@ -78,31 +90,36 @@ nnoremap <CR> o<ESC>
 " save if updated on double Leader
 noremap <Leader><Leader> :up<CR>
 
-" up/down
+" up/down prev/next => center
 nnoremap <C-Y> jzz
 nnoremap <C-E> kzz
+nnoremap <C-I> <C-I>zz
+nnoremap <C-O> <C-O>zz
 
-" select/yank to line end
-vnoremap v $h
+" yank to line end
 nnoremap Y y$
 
 " exit
 nnoremap QQ :qa<CR>
 
+" insert after/before a word
+nnoremap <M-w> wa
+nnoremap <M-b> bi
+
 " buffer next/prev
-"-----------------------------------------------------------
 nnoremap <C-N> :bn<CR>
 nnoremap <C-P> :bp<CR>
 nnoremap <S-Tab> :bp<CR>
 
+" window prev (ref: window next: C-W C-W)
+nnoremap <C-W><C-P> <C-W><S-W>
+
 " tab
-"-----------------------------------------------------------
 nnoremap <C-K>c :tabnew<CR>
 nnoremap <C-K>d :tabclose<CR>
 nnoremap <C-K><C-D> :tabclose<CR>
 nnoremap <C-K>o :tabonly<CR>
 nnoremap <C-K><C-O> :tabonly<CR>
-
 nnoremap <C-K><C-P> gT
 nnoremap <C-K>h gT
 nnoremap <C-K><C-N> gt
@@ -110,10 +127,27 @@ nnoremap <C-K><C-K> gt
 nnoremap <C-K>l gt
 nnoremap <C-Tab> gt
 
-" emacs keymap in command mode
-"-----------------------------------------------------------
+
+" ========================= visual mode
+" select to line end
+vnoremap v $h
+
+" search under visual selection
+vnoremap * y/<C-R>"<CR>
+vnoremap # y?<C-R>"<CR>
+
+" ========================= command mode
+" emacs keymap
 cmap <C-A> <Home>
 cmap <C-E> <End>
 cmap <C-F> <Right>
 cmap <C-B> <Left>
+
+" noh on ESCs
+cmap <ESC><ESC> <C-C>:noh<CR>
+
+
+" ========================= insert mode
+" YYYYMMDD-HHMM
+inoremap <F6> <C-r>=strftime('%Y%m%d-%H%M')<CR>
 
