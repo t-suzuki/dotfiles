@@ -151,7 +151,10 @@ function ll {
 }
 
 function cd {
-  builtin cd $@
+  if ! builtin cd 2>/dev/null $@; then
+    echo "$fg[yellow]cannot cd: : $@$reset_color"
+    return
+  fi
   if [ "$?" -eq 0 ]; then
     lscdmax=40
     nfiles=$(/bin/ls|wc -l)
