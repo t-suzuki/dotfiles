@@ -3,6 +3,7 @@
 # vim:enc=utf8:
 #
 # history:
+#   20090620: 微修正. ホストローカルな設定
 #   20090613: 微修正, bashなどのPATH設定を流用する, コマンド実行中にタイトルに'(*)'挿入
 #   20090612: バッファが空の状態でEnter入力でls, ^Oでcd -
 #   20090609: cd後のlsでファイル数が多すぎる場合に省略
@@ -418,4 +419,8 @@ compctl -b bindkey
 compdef -d java
 
 _cache_hosts=(localhost $HOST)
+
+# include ~/.zsh_localrc if exists
+local localzshrc=~/.zsh_localrc_$(basename $(hostname))
+test -r $localzshrc && source $localzshrc && echo "$(hostname) local settings loaded."
 
