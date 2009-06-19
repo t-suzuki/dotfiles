@@ -1,33 +1,49 @@
 " ------------------------------------------------------------
 " 色設定
 
-syntax on
-colorscheme ron
+if has("syntax")
+  syntax on
 
-"highlight LineNr ctermfg=darkyellow guifg=darkyellow
-"highlight NonText ctermfg=darkgrey gui=NONE guifg=darkcyan
-highlight Folded ctermfg=blue
-highlight SpecialKey cterm=underline ctermfg=darkgrey guifg=darkcyan
+  "highlight LineNr ctermfg=darkyellow guifg=darkyellow
+  highlight NonText ctermfg=darkgrey gui=NONE guifg=darkcyan
+  highlight Folded ctermfg=blue
+  highlight SpecialKey cterm=underline ctermfg=darkgrey guifg=darkcyan
 
-"highlight Cursor ctermbg=darkyellow guibg=darkyellow
-"highlight CursorIM ctermbg=red guibg=red
+  highlight Cursor ctermbg=darkyellow guibg=darkyellow
+  highlight CursorIM ctermbg=red guibg=red
 
-" カレントウィンドウにのみ罫線を引く
-" 特にPHPで重いのでコメントアウト
-"augroup cch
-"  autocmd! cch
-"  autocmd WinLeave * set nocursorcolumn nocursorline
-"  autocmd WinEnter,BufRead * set cursorcolumn cursorline
-"augroup END
-"
-"highlight CursorLine ctermbg=black guibg=black
-"highlight CursorColumn ctermbg=black guibg=black
+  " 256color settings
+  if &term=='xterm-256color'
+    silent! colorscheme orangeocean256
+    highlight Normal ctermbg=none
+    highlight NonText ctermbg=none
+  else
+    colorscheme ron
+    highlight CursorLine cterm=underline ctermbg=darkgrey guibg=black
+    highlight CursorColumn cterm=none ctermbg=darkgrey guibg=black
+  endif
+
+  " カレントウィンドウにのみ罫線を引く
+  augroup cch
+    autocmd! cch
+    autocmd WinLeave * set nocursorcolumn nocursorline
+    autocmd WinEnter,BufRead * set cursorcolumn cursorline
+    " PHPで重いので使わない
+    autocmd WinEnter,BufRead *.php set nocursorcolumn nocursorline
+  augroup END
+endif
+
+
+" filetype specific
+"----------------------------------------------------------
+filetype plugin indent on
+autocmd FileType python set ts=4 sts=4 sw=4 noet noci si ai cinwords=if,elif,else,for,while,try,except,finally,def,class,with indentkeys+=#
+autocmd FileType haskell set ts=2 sts=2 sw=2 et noci si ai indentkeys+=0--
 
 " tab
 "----------------------------------------------------------
 set et ts=2 sw=2 sts=2
 set list listchars=tab:>-,eol:$,trail:*
-autocmd FileType python set ts=4 sts=4 sw=4 noet noci
 
 " edit
 "-----------------------------------------------------------
@@ -91,8 +107,6 @@ nnoremap <CR> o<ESC>
 noremap <Leader><Leader> :up<CR>
 
 " up/down prev/next => center
-nnoremap <C-Y> jzz
-nnoremap <C-E> kzz
 nnoremap <C-I> <C-I>zz
 nnoremap <C-O> <C-O>zz
 
@@ -101,10 +115,6 @@ nnoremap Y y$
 
 " exit
 nnoremap QQ :qa<CR>
-
-" insert after/before a word
-nnoremap <M-w> wa
-nnoremap <M-b> bi
 
 " buffer next/prev
 nnoremap <C-N> :bn<CR>
@@ -127,7 +137,6 @@ nnoremap <C-K><C-K> gt
 nnoremap <C-K>l gt
 nnoremap <C-Tab> gt
 
-
 " ========================= visual mode
 " select to line end
 vnoremap v $h
@@ -148,6 +157,13 @@ cmap <ESC><ESC> <C-C>:noh<CR>
 
 
 " ========================= insert mode
-" YYYYMMDD-HHMM
+" YYYYMMDD, YYYYMMDD-HHMM
+inoremap <F5> <C-r>=strftime('%Y%m%d')<CR>
 inoremap <F6> <C-r>=strftime('%Y%m%d-%H%M')<CR>
+
+" return to normal mode and suspend
+inoremap <C-Z> <ESC><C-Z>
+
+" move to line end
+inoremap <C-L> <C-O>A
 

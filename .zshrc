@@ -43,20 +43,6 @@ eval $exports
 
 # ----------------------------------------
 # env
-if [ $TERM = "cygwin" ]; then
-  export LANG=ja_JP.SJIS
-  export LC_ALL=C
-  export SHELL=/usr/local/bin/zsh
-  export PATH="/java/jdk1.6.0_03/bin:$PATH"
-  export PATH="/cygdrive/f/app/prog/ghc/bin:$PATH"
-else
-  export LANG=ja_JP.UTF-8
-  unset LC_ALL
-  export LC_MESSAGES=C
-  export SHELL=`which zsh`
-  export PATH="$HOME/bin:$PATH"
-fi
-
 if exists lv; then
   export PAGER=lv
 elif exists less; then
@@ -72,17 +58,45 @@ export WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 export rep=file:///var/svn/
 
 # ----------------------------------------
+# terminal specific
+case $TERM in;
+  "cygwin")
+    export LANG=ja_JP.SJIS
+    export LC_ALL=C
+    export SHELL=/usr/local/bin/zsh
+    export PATH="/java/jdk1.6.0_03/bin:$PATH"
+    export PATH="/cygdrive/f/app/prog/ghc/bin:$PATH"
+  ;;
+
+  *)
+    export LANG=ja_JP.UTF-8
+    unset LC_ALL
+    export LC_MESSAGES=C
+    export SHELL=`which zsh`
+    export PATH="$HOME/bin:$PATH"
+    # determine best terminal
+    if [ -f /usr/share/terminfo/x/xterm-256color ]; then
+      export TERM=xterm-256color
+    elif [ -f /usr/share/terminfo/x/xterm-color ]; then
+      export TERM=xterm-color
+    else
+      export TERM=xterm
+    fi
+  ;;
+esac
+
+# ----------------------------------------
 # aliases
 setopt completealiases
 if [ $TERM = "cygwin" ]; then
-  alias ls='ls --show-control-chars --color=always -F'
-  alias l='ls --show-control-chars --color=always -FAl'
+  alias ls='ls --show-control-chars --color=auto -F'
+  alias l='ls --show-control-chars --color=auto -FAl'
   export LV='-Os -c'
 else
   case $(uname) in
   'Linux')
-    alias ls='ls --color=always -Fh'
-    alias l='ls --color=always -FAlh'
+    alias ls='ls --color=auto -Fh'
+    alias l='ls --color=auto -FAlh'
     ;;
   'FreeBSD')
     alias ls='ls -GFh'
@@ -295,7 +309,7 @@ setopt share_history
 setopt noclobber # 存在するファイルにリダイレクトしない
 setopt autocd
 setopt autopushd
-unsetopt pushdignoredups # for 'Ctrl-O' historical cd
+setopt pushdignoredups
 setopt ignoreeof # C-Dでログアウトしない
 setopt print_eightbit # multibyte characters
 setopt noflowcontrol # no C-S C-Q
