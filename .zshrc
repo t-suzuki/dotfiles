@@ -218,6 +218,8 @@ bindkey '^U' backward-kill-line
 bindkey '^[[3~' delete-char-or-list # Del
 bindkey '^P' history-beginning-search-backward
 bindkey '^N' history-beginning-search-forward
+bindkey '^J' accept-and-hold
+
 # directory up on Ctrl-6
 function cdup() {
   echo
