@@ -132,6 +132,13 @@ alias -g GG='| xargs -0 grep -i'
 alias -g G=' 2>&1 | grep -i'
 alias -g L=" 2>&1 | $PAGER"
 alias -g V=" 2>&1 | vim -R -"
+# clipboard (requires xsel which can be installed by "sudo aptitude install xsel")
+if exists xsel; then
+  alias -g   B=" | xsel -b -i" # stdout => clip
+  alias -g  B2=" 2>&1 | xsel -b -i" # stdout + stderr => clip
+  alias -g  BB=" | (cat 1>&2 | cat | xsel -b -i) 2>&1" # stdout => clip and stdout
+  alias -g BB2=" 2>&1 | (cat 1>&2 | cat | xsel -b -i) 2>&1" # stdout, stderr => clip and stdout
+fi
 alias T='tail -n 50 -f'
 # short commands
 alias psp='ps -F ax'
