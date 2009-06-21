@@ -15,12 +15,13 @@ if has("syntax")
   " 256color settings
   if &term=='xterm-256color'
     silent! colorscheme orangeocean256
-    highlight Normal ctermbg=none
-    highlight NonText ctermbg=none
+    "highlight Normal ctermbg=none
+    "highlight NonText ctermbg=none
+    highlight CursorLine cterm=none
   else
     colorscheme ron
-    highlight CursorLine cterm=underline ctermbg=darkgrey guibg=black
-    highlight CursorColumn cterm=none ctermbg=darkgrey guibg=black
+    highlight CursorLine cterm=none ctermbg=darkgrey guibg=black
+    highlight CursorColumn cterm=none ctermbg=none guibg=black
   endif
 
   " カレントウィンドウにのみ罫線を引く
@@ -166,4 +167,25 @@ inoremap <C-Z> <ESC><C-Z>
 
 " move to line end
 inoremap <C-L> <C-O>A
+
+" --------------------- commentout.vim ---------------------
+" lhs comments
+vmap ,# :s/^/#/<CR>:nohlsearch<CR>
+vmap ,/ :s/^/\/\//<CR>:nohlsearch<CR>
+vmap ,> :s/^/> /<CR>:nohlsearch<CR>
+vmap ," :s/^/\"/<CR>:nohlsearch<CR>
+vmap ,% :s/^/%/<CR>:nohlsearch<CR>
+vmap ,! :s/^/!/<CR>:nohlsearch<CR>
+vmap ,; :s/^/;/<CR>:nohlsearch<CR>
+vmap ,- :s/^/--/<CR>:nohlsearch<CR>
+vmap ,c :s/^\/\/\\|^--\\|^> \\|^[#"%!;]//<CR>:nohlsearch<CR>
+
+" " block comments
+vmap ,b v`<I<CR><esc>k0i/*<ESC>`>j0i*/<CR><esc><ESC>
+vmap ,h v`<I<CR><esc>k0i<!--<ESC>`>j0i--><CR><esc><ESC>
+
+
+"-----------------------------------------------------------
+" local settings
+:execute "source ~/.vim_localrc_" . system("echo -n $(hostname)")
 
