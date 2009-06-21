@@ -170,14 +170,10 @@ inoremap <C-L> <C-O>A
 
 " --------------------- commentout.vim ---------------------
 " lhs comments
-vmap ,# :s/^/#/<CR>:nohlsearch<CR>
-vmap ,/ :s/^/\/\//<CR>:nohlsearch<CR>
-vmap ,> :s/^/> /<CR>:nohlsearch<CR>
-vmap ," :s/^/\"/<CR>:nohlsearch<CR>
-vmap ,% :s/^/%/<CR>:nohlsearch<CR>
-vmap ,! :s/^/!/<CR>:nohlsearch<CR>
-vmap ,; :s/^/;/<CR>:nohlsearch<CR>
-vmap ,- :s/^/--/<CR>:nohlsearch<CR>
+vmap ,/ :s/^/\/\//<CR>:nohlsearch<CR>:'<,'>s/^\/\//\1/e<CR>:noh<CR>
+vmap ," :s/^/\"/<CR>:nohlsearch<CR>:'<,'>s/^\"\"/\1/e<CR>:noh<CR>
+vmap ,% :s/^/%/<CR>:nohlsearch<CR>:'<,'>s/^%%/\1/e<CR>:noh<CR>
+vmap ,- :s/^/--/<CR>:nohlsearch<CR>:'<,'>s/^----/\1/e<CR>:noh<CR>
 vmap ,c :s/^\/\/\\|^--\\|^> \\|^[#"%!;]//<CR>:nohlsearch<CR>
 
 " " block comments
