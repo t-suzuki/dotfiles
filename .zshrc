@@ -295,6 +295,8 @@ function smart-search-history {
     LBUFFER="$trim"
     zle $1
     LBUFFER="$old_leader""$LBUFFER"
+  else
+    zle $1
   fi
 }
 function smart-search-history-backward {
