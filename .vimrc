@@ -82,11 +82,10 @@ set scrolloff=5
 " 画面最下行の行を出来るだけ表示
 set display=lastline
 
-" omni complete
+" completion
 "-----------------------------------------------------------
-hi Pmenu guibg=#666666
-hi PmenuSel guibg=#8cd0d3 guifg=#666666
-hi PmenuSbar guibg=#333333
+" close menu and new line
+inoremap <expr> <CR> pumvisible()?"\<C-Y>\<CR>":"\<CR>"
 
 "-----------------------------------------------------------
 " keymaps
@@ -126,16 +125,16 @@ nnoremap <S-Tab> :bp<CR>
 nnoremap <C-W><C-P> <C-W><S-W>
 
 " tab
-nnoremap <C-K>c :tabnew<CR>
-nnoremap <C-K>d :tabclose<CR>
-nnoremap <C-K><C-D> :tabclose<CR>
-nnoremap <C-K>o :tabonly<CR>
-nnoremap <C-K><C-O> :tabonly<CR>
-nnoremap <C-K><C-P> gT
-nnoremap <C-K>h gT
-nnoremap <C-K><C-N> gt
-nnoremap <C-K><C-K> gt
-nnoremap <C-K>l gt
+nnoremap <C-?>c :tabnew<CR>
+nnoremap <C-?>d :tabclose<CR>
+nnoremap <C-?><C-D> :tabclose<CR>
+nnoremap <C-?>o :tabonly<CR>
+nnoremap <C-?><C-O> :tabonly<CR>
+nnoremap <C-?><C-P> gT
+nnoremap <C-?>h gT
+nnoremap <C-?><C-N> gt
+nnoremap <C-?><C-?> gt
+nnoremap <C-?>l gt
 nnoremap <C-Tab> gt
 
 " ========================= visual mode
