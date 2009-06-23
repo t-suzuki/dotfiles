@@ -275,6 +275,40 @@ function lsoraccept() {
 zle -N lsoraccept
 bindkey '^M' lsoraccept
 
+
+# complete from history ignoring leading (sudo, '|', man, which, ..) in current prompt
+# only complete in this way if there are some other input than those ignoring patterns
+# examples with history:
+#  ldconfig
+#  make
+#  make install
+#  less
+# case:
+#  $ sudo <C-P>  => $ sudo ldconfig
+#  $ sudo m<C-P>  => $ sudo make install => $ sudo make
+#  $ wget -O - http://.../ | l<C-P> => $ wget -O - http://.../ | less
+SMART_SEARCH_HISTORY_PATTERN='(sudo|\||man|which)'
+function smart-search-history {
+  local trim="$(echo "$LBUFFER" | sed -r "s/^.*${SMART_SEARCH_HISTORY_PATTERN} *//")"
+  local old_leader="$(echo "$LBUFFER" | sed -r "/${SMART_SEARCH_HISTORY_PATTERN}/s/(^.*${SMART_SEARCH_HISTORY_PATTERN} *).+?$/\\1/p;d")"
+  if [ -n "$trim" ]; then
+    LBUFFER="$trim"
+    zle $1
+    LBUFFER="$old_leader""$LBUFFER"
+  fi
+}
+function smart-search-history-backward {
+  smart-search-history history-beginning-search-backward
+}
+function smart-search-history-forward {
+  smart-search-history history-beginning-search-forward
+}
+
+#zle -N smart-search-history-backward
+#bindkey '^P' smart-search-history-backward
+#zle -N smart-search-history-forward
+#bindkey '^N' smart-search-history-forward
+
 # hjkl on completion
 zmodload -i zsh/complist # -i: ignore errors (on duplicate load)
 bindkey -M menuselect 'h' vi-backward-char
@@ -307,13 +341,14 @@ bindkey '^[d' _quote-previous-word-in-double
 # ----------------------------------------
 # history
 HISTFILE=~/.zsh_history
-HISTSIZE=50000
-SAVEHIST=50000
+HISTSIZE=100000
+SAVEHIST=100000
 setopt appendhistory
 setopt histignorealldups
 setopt histnofunctions
 setopt histnostore
 setopt histreduceblanks
+setopt histignorespace # do not add a command line with leading space to the history
 setopt share_history
 
 # ----------------------------------------
