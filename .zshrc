@@ -223,8 +223,8 @@ bindkey '^[[4~' end-of-line # End
 bindkey '^T' kill-word
 bindkey '^U' backward-kill-line
 bindkey '^[[3~' delete-char-or-list # Del
-bindkey '^P' history-beginning-search-backward
-bindkey '^N' history-beginning-search-forward
+#bindkey '^P' history-beginning-search-backward
+#bindkey '^N' history-beginning-search-forward
 
 # directory up on Ctrl-6
 function cdup() {
@@ -304,10 +304,10 @@ function smart-search-history-forward {
   smart-search-history history-beginning-search-forward
 }
 
-#zle -N smart-search-history-backward
-#bindkey '^P' smart-search-history-backward
-#zle -N smart-search-history-forward
-#bindkey '^N' smart-search-history-forward
+zle -N smart-search-history-backward
+bindkey '^P' smart-search-history-backward
+zle -N smart-search-history-forward
+bindkey '^N' smart-search-history-forward
 
 # hjkl on completion
 zmodload -i zsh/complist # -i: ignore errors (on duplicate load)
