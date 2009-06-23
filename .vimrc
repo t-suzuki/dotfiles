@@ -166,6 +166,9 @@ inoremap <C-Z> <ESC><C-Z>
 " move to line end
 inoremap <C-L> <C-O>A
 
+" emacs like C-K
+inoremap <C-K> <ESC>lDa
+
 " --------------------- commentout.vim ---------------------
 " lhs comments
 vmap ,/ :s/^/\/\//<CR>:nohlsearch<CR>:'<,'>s/^\/\//\1/e<CR>:noh<CR>
