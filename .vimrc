@@ -101,7 +101,6 @@ nmap <ESC><ESC> :noh<CR>
 
 " insert CR
 nnoremap <C-J> o<ESC>
-nnoremap <CR> o<ESC>
 
 " save if updated on double Leader
 noremap <Leader><Leader> :up<CR>
