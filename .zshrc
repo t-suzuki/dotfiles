@@ -79,6 +79,8 @@ case $TERM in;
     # determine best terminal
     if [ -f /usr/share/terminfo/x/xterm-256color ]; then
       export TERM=xterm-256color
+    elif [ -f /usr/share/terminfo/x/xterm-debian ]; then
+      export TERM=xterm-debian
     elif [ -f /usr/share/terminfo/x/xterm-color ]; then
       export TERM=xterm-color
     else
@@ -115,7 +117,7 @@ alias w3m='w3m -O ja_JP.UTF-8'
 # 'go'mi = trash (apt-get install trash-cli)
 if exists trash; then
   alias go='trash'
-  list-trash
+#  list-trash
 fi
 # for function cd
 alias ~='cd ~'

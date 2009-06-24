@@ -30,16 +30,16 @@ escape ^t^t
 hardstatus alwayslastline
 defhstatus "{= gk}[d 02c] {=b bw}[w]{-} {=b kG}[n t]{-}"
 
-#defflow on # will force screen to process ^S/^Q
+defflow off # never process ^S/^Q
 deflogin on
-#autodetach off
+autodetach on
 
-# turn visual bell on
-#vbell on
+# turn visual bell off
+vbell off
 #vbell_msg "   Wuff  ----  Wuff!!  "
 
 # define a bigger scrollback, default is 100 lines
-defscrollback 1024
+defscrollback 10000
 
 # ------------------------------------------------------------------------------
 # SCREEN KEYBINDINGS

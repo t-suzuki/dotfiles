@@ -13,7 +13,7 @@ if has("syntax")
   highlight CursorIM ctermbg=red guibg=red
 
   " 256color settings
-  if &term=='xterm-256color'
+  if &term=='xterm-256color' || &term=='xterm-debian'
     silent! colorscheme orangeocean256
     "highlight Normal ctermbg=none
     "highlight NonText ctermbg=none
@@ -34,6 +34,10 @@ if has("syntax")
   augroup END
 endif
 
+
+" open quickfix
+"----------------------------------------------------------
+autocmd QuickFixCmdPost make,grep,grepadd,vimgrep copen
 
 " filetype specific
 "----------------------------------------------------------
@@ -101,6 +105,7 @@ nmap <ESC><ESC> :noh<CR>
 
 " insert CR
 nnoremap <C-J> o<ESC>
+"nnoremap <CR> o<ESC> " not good for quickfix window
 
 " save if updated on double Leader
 noremap <Leader><Leader> :up<CR>
@@ -184,5 +189,5 @@ vmap ,h v`<I<CR><esc>k0i<!--<ESC>`>j0i--><CR><esc><ESC>
 
 "-----------------------------------------------------------
 " local settings
-:execute "source ~/.vim_localrc_" . system("echo -n $(hostname)")
+silent! execute "source ~/.vim_localrc_" . system("echo -n $(hostname)")
 
