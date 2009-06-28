@@ -380,6 +380,7 @@ setopt noclobber # 存在するファイルにリダイレクトしない
 setopt autocd
 setopt autopushd
 setopt pushdignoredups
+setopt pushd_minus # swap '-' and '+' in the context of pushd
 setopt ignoreeof # C-Dでログアウトしない
 setopt print_eightbit # multibyte characters
 setopt noflowcontrol # no C-S C-Q
