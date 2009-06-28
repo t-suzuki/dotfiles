@@ -212,9 +212,9 @@ function backup {
   D=`pwd|sed -r 's/^.*\/(.*?)$/\1/'`
   F=${D}_`date +%Y%m%d_%H%M`.tar.gz
   if [ -f 'Makefile' ]; then make clean; fi
-  builtin cd ..
-  tar zcvf ${F} $D
-  builtin cd -
+  (builtin cd ..;
+  tar zcvf ${F} $D;
+  builtin cd -)
   echo "saved: ${F}"
 }
 
