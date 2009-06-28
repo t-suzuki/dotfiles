@@ -62,7 +62,7 @@ hi Folded		ctermfg=233 ctermbg=195 cterm=bold term=bold
 hi FoldColumn	ctermfg=251 ctermbg=0 cterm=bold term=bold
 
 " syntax colors
-hi Comment		ctermfg=255 ctermbg=27 cterm=none
+hi Comment		ctermfg=51 ctermbg=none cterm=none
 " Constant
 hi String		ctermfg=192 cterm=none
 hi Character	ctermfg=172 cterm=none
