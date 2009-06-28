@@ -454,7 +454,9 @@ export LISTMAX=20
 export LS_COLORS='di=1;34:ln=35:so=32:pi=33:ex=1;31:bd=46;34:cd=43;34:su=41;30:tw=42;30:ow=43;30'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:default' menu select=1 # C-P/C-N
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' # match upper case from lower case
+# match upper case from lower case, search after -_./
+# dir => Dir, _t => some_tmp, long.c => longfilename.c
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z} r:|[-_./]=** r:|=*'
 setopt nolistbeep # 曖昧補完でビープしない
 setopt autolist # 補完時にリスト表示
 #setopt listpacked # compact list on completion # 不安定?
