@@ -343,6 +343,24 @@ _quote-previous-word-in-double() {
 zle -N _quote-previous-word-in-double
 bindkey '^[d' _quote-previous-word-in-double
 
+# resume suspended job
+function zlewidget-fg {
+  if [ "$(printf '%d' "$BUFFER")" = "$BUFFER" ]; then
+    # fg %N
+    echo ''
+    builtin fg %$BUFFER
+    BUFFER=''
+    zle reset-prompt
+  else
+    # fg
+    echo ''
+    builtin fg
+    zle reset-prompt
+  fi
+}
+zle -N zlewidget-fg
+bindkey '^Z' zlewidget-fg
+
 # ----------------------------------------
 # history
 HISTFILE=~/.zsh_history
