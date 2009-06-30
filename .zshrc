@@ -3,6 +3,7 @@
 # vim:enc=utf8:
 #
 # history:
+#   20090701: for文などの継続入力時のlsoracceptで落ちる問題を暫定解決
 #   20090624: sudoや|を無視して補完候補を履歴から探すsmart-search-history
 #   20090620: 微修正. ホストローカルな設定
 #   20090613: 微修正, bashなどのPATH設定を流用する, コマンド実行中にタイトルに'(*)'挿入
@@ -261,7 +262,9 @@ bindkey '^O' cdback
 
 # ls on single Enter
 function lsoraccept() {
-  if [ -z "$BUFFER" ]; then
+  # BUG: use /usr/bin/test rather than builtin [ .
+  # calling [ in $CONTEXT = 'cont' will cause segv to zsh 4.3.4
+  if /usr/bin/test -z "$BUFFER"; then
     echo
     if [ $(/bin/ls|wc -l) -eq 0 ]; then
       ls -AF --color=always
@@ -269,11 +272,11 @@ function lsoraccept() {
       ls -F --color=always
     fi
     echo
-    zle reset-prompt
   else
     zle accept-line
-    zle reset-prompt
   fi
+  # call reset-prompt outside the if-else-fi statement (to prepend showing 'for else>' in PS2)
+  zle reset-prompt
 }
 zle -N lsoraccept
 bindkey '^M' lsoraccept
