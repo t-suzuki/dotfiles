@@ -451,7 +451,7 @@ compinit -u
 
 export LISTMAX=20
 # ls, colors in completion
-export LS_COLORS='di=1;34:ln=35:so=32:pi=33:ex=1;31:bd=46;34:cd=43;34:su=41;30:tw=42;30:ow=43;30'
+export LS_COLORS='di=1;34:ln=1;35:so=32:pi=33:ex=1;31:bd=46;34:cd=43;34:su=41;30:tw=42;30:ow=43;30'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:default' menu select=1 # C-P/C-N
 # match upper case from lower case, search after -_./

@@ -2,7 +2,7 @@
 set guioptions-=m
 set guioptions-=T
 
-set guifont=さざなみゴシック\ Medium\ 10,M+2VM+IPAG\ circle\ 10,Kochi\ Gothic\ 10
+set guifont=Bitstream\ Vera\ Sans\ Mono\ 11,さざなみゴシック\ Medium\ 10,M+2VM+IPAG\ circle\ 10,Kochi\ Gothic\ 10
 
 if has('syntax')
   colorscheme ron
