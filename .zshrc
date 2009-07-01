@@ -348,6 +348,9 @@ bindkey '^[d' _quote-previous-word-in-double
 
 # resume suspended job
 function zlewidget-fg {
+  if [ -z "$(jobs)" ]; then
+    return
+  fi
   if [ "$(printf '%d' "$BUFFER")" = "$BUFFER" ]; then
     # fg %N
     echo ''
