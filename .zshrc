@@ -26,7 +26,7 @@
 #
 
 # exists?
-function exists() {
+function exists {
   if which "$1" 1>/dev/null 2>&1; then return 0; else return 1; fi
 }
 
@@ -231,7 +231,7 @@ bindkey '^P' history-beginning-search-backward
 bindkey '^N' history-beginning-search-forward
 
 # directory up on Ctrl-6
-function cdup() {
+function cdup {
   echo
   cd ..
   echo
@@ -241,7 +241,7 @@ zle -N cdup
 bindkey '^\^' cdup
 
 # directory back on Ctrl-O
-function cdback() {
+function cdback {
   if [ "$(printf '%d' "$BUFFER")" = "$BUFFER" ]; then
     # back N level (reset)
     echo
@@ -261,7 +261,7 @@ zle -N cdback
 bindkey '^O' cdback
 
 # ls on single Enter
-function lsoraccept() {
+function lsoraccept {
   # BUG: use /usr/bin/test rather than builtin [ .
   # calling [ in $CONTEXT = 'cont' will cause segv to zsh 4.3.4
   if /usr/bin/test -z "$BUFFER"; then
@@ -477,7 +477,7 @@ setopt autoparamkeys # 補完後の:,)を削除
 fignore=(.o .swp lost+found) # 補完で無視する
 
 # ssh
-function print_known_hosts() {
+function print_known_hosts {
   if [ -f $HOME/.ssh/known_hosts ]; then
     cat $HOME/.ssh/known_hosts | tr ',' ' ' | cut -d' ' -f1
   fi
