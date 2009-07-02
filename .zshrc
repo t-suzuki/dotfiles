@@ -77,16 +77,20 @@ case $TERM in;
     export LC_MESSAGES=C
     export SHELL=`which zsh`
     export PATH="$HOME/bin:$PATH"
-    # determine best terminal
-    if [ -f /usr/share/terminfo/x/xterm-256color ]; then
-      export TERM=xterm-256color
-    elif [ -f /usr/share/terminfo/x/xterm-debian ]; then
-      export TERM=xterm-debian
-    elif [ -f /usr/share/terminfo/x/xterm-color ]; then
-      export TERM=xterm-color
-    else
-      export TERM=xterm
-    fi
+    case "$TERM" in
+      xterm*)
+      # determine best terminal
+      if [ -f /usr/share/terminfo/x/xterm-256color ]; then
+        export TERM=xterm-256color
+      elif [ -f /usr/share/terminfo/x/xterm-debian ]; then
+        export TERM=xterm-debian
+      elif [ -f /usr/share/terminfo/x/xterm-color ]; then
+        export TERM=xterm-color
+      else
+        export TERM=xterm
+      fi
+      ;;
+    esac
   ;;
 esac
 
@@ -395,13 +399,21 @@ setopt noflowcontrol # no C-S C-Q
 # insert '(*)' into the head of window title while a command is running
 # in job: "(*) path [name@host]"
 # finish: "path [name@host]"
-function precmd_title { #function chpwd {
-  # called in precmd
-  print -Pn "\e]2;%~ [%n@%m]\a"
-}
-function preexec {
-  print -Pn "\e]2;(*)%~ [%n@%m]\a"
-}
+case "$TERM" in
+  kterm*|xterm*)
+    function precmd_title { #function chpwd {
+      # called in precmd
+      print -Pn "\e]2;%~ [%n@%m]\a"
+    }
+    function preexec {
+      print -Pn "\e]2;(*)%~ [%n@%m]\a"
+    }
+  ;;
+  *)
+  function precmd_title {
+  }
+  ;;
+esac
 
 # ----------------------------------------
 # prompt
