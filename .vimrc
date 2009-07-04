@@ -1,10 +1,9 @@
+" syntax and colors
 " ------------------------------------------------------------
-" 色設定
 
 if has("syntax")
   syntax on
 
-  "highlight LineNr ctermfg=darkyellow guifg=darkyellow
   highlight NonText ctermfg=darkgrey gui=NONE guifg=darkcyan
   highlight Folded ctermfg=blue
   highlight SpecialKey cterm=underline ctermfg=darkgrey guifg=darkcyan
@@ -35,7 +34,7 @@ if has("syntax")
 endif
 
 
-" open quickfix
+" auto open quickfix
 "----------------------------------------------------------
 autocmd QuickFixCmdPost make,grep,grepadd,vimgrep copen
 
@@ -88,7 +87,7 @@ set display=lastline
 
 " completion
 "-----------------------------------------------------------
-" close menu and new line
+" for autocomplpop.vim: close menu and new line
 inoremap <expr> <CR> pumvisible()?"\<C-Y>\<CR>":"\<CR>"
 
 "-----------------------------------------------------------
@@ -97,7 +96,7 @@ inoremap <expr> <CR> pumvisible()?"\<C-Y>\<CR>":"\<CR>"
 
 " ========================= normal mode
 " noh on ESCs
-nmap <ESC><ESC> :silent! :noh<CR>
+nnoremap <silent> <ESC><ESC> :noh<CR>
 
 " graphical j/k (dangerous for scripts)
 "nnoremap j gj
@@ -118,33 +117,35 @@ nnoremap <C-O> <C-O>zz
 nnoremap Y y$
 
 " replace selection by register
-nnoremap <C-K> :set opfunc=ReplaceMotion<CR>g@
-vnoremap <C-K> :<C-U>call ReplaceMotion('', 1)<CR>
+nnoremap <silent> <C-K> :set opfunc=ReplaceMotion<CR>g@
+vnoremap <silent> <C-K> :<C-U>call ReplaceMotion('', 1)<CR>
 function! ReplaceMotion(type, ...)
   let sel_save = &selection
   let &selection = "inclusive"
   let reg_save = @@
+  let mark_save = getpos("'a")
 
   " get the end of the line (for motion including line end)
-  silent exe "normal! '>$"
-  let lineend_pos = getpos('.')
 
   if a:0 " visual mode
-    if getpos("'>") == lineend_pos
-      silent exe 'normal! `<d`>d$"0p<'
+    silent exe "normal! '>$"
+    if getpos("'>") == getpos('.')
+      silent exe 'normal! `<"_d`>"_d$"0p`<'
     else
-      silent exe 'normal! `>lma`<d`a"0P<'
+      silent exe 'normal! `>lma`<"_d`a"0P`<'
     endif
   elseif a:type == 'char' " char motion
-    if getpos("']") == lineend_pos
-      silent exe 'normal! `[d`]d$"0p`['
+    silent exe "normal! ']$"
+    if getpos("']") == getpos('.')
+      silent exe 'normal! `["_d`]"_d$"0p`['
     else
-      silent exe 'normal! `]lma`[d`a"0P`['
+      silent exe 'normal! `]lma`["_d`a"0P`['
     endif
   endif
 
   let &selection = sel_save
   let @@ = reg_save
+  call setpos("'a", mark_save)
 endfunction
 
 " exit
