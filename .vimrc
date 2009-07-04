@@ -97,7 +97,7 @@ inoremap <expr> <CR> pumvisible()?"\<C-Y>\<CR>":"\<CR>"
 
 " ========================= normal mode
 " noh on ESCs
-nmap <ESC><ESC> :noh<CR>
+nmap <ESC><ESC> :silent! :noh<CR>
 
 " graphical j/k (dangerous for scripts)
 "nnoremap j gj
@@ -116,6 +116,36 @@ nnoremap <C-O> <C-O>zz
 
 " yank to line end
 nnoremap Y y$
+
+" replace selection by register
+nnoremap <C-K> :set opfunc=ReplaceMotion<CR>g@
+vnoremap <C-K> :<C-U>call ReplaceMotion('', 1)<CR>
+function! ReplaceMotion(type, ...)
+  let sel_save = &selection
+  let &selection = "inclusive"
+  let reg_save = @@
+
+  " get the end of the line (for motion including line end)
+  silent exe "normal! '>$"
+  let lineend_pos = getpos('.')
+
+  if a:0 " visual mode
+    if getpos("'>") == lineend_pos
+      silent exe 'normal! `<d`>d$"0p<'
+    else
+      silent exe 'normal! `>lma`<d`a"0P<'
+    endif
+  elseif a:type == 'char' " char motion
+    if getpos("']") == lineend_pos
+      silent exe 'normal! `[d`]d$"0p`['
+    else
+      silent exe 'normal! `]lma`[d`a"0P`['
+    endif
+  endif
+
+  let &selection = sel_save
+  let @@ = reg_save
+endfunction
 
 " exit
 nnoremap QQ :qa<CR>
@@ -156,9 +186,16 @@ cmap <C-E> <End>
 cmap <C-F> <Right>
 cmap <C-B> <Left>
 
-" noh on ESCs
-cmap <ESC><ESC> <C-C>:noh<CR>
+" auto list on completion
+cnoremap <C-E> <C-L><C-D>
+" completion from history
+cnoremap <C-P> <Up>
+cnoremap <C-N> <Down>
 
+" expand path
+cmap <C-G> <c-r>=expand('%:p:h')<cr>/
+" expand file (not ext)
+cmap <C-G><C-G> <c-r>=expand('%:p:r')<cr>
 
 " ========================= insert mode
 " YYYYMMDD, YYYYMMDD-HHMM
