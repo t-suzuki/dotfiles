@@ -186,7 +186,7 @@ cmap <C-F> <Right>
 cmap <C-B> <Left>
 
 " auto list on completion
-cnoremap <C-E> <C-L><C-D>
+cnoremap <C-L> <C-L><C-D>
 " completion from history
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
