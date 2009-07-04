@@ -213,12 +213,24 @@ function psg {
   done
 }
 
+# backup whole directory
 function backup {
   D=`pwd|sed -r 's/^.*\/(.*?)$/\1/'`
   F=${D}_`date +%Y%m%d_%H%M`.tar.gz
   if [ -f 'Makefile' ]; then make clean; fi
   (builtin cd ..;
   tar zcvf ${F} $D;
+  builtin cd -)
+  echo "saved: ${F}"
+}
+
+# backup only right on the current level (no recursion)
+function slimbackup {
+  D=`pwd|sed -r 's/^.*\/(.*?)$/\1/'`
+  F=${D}_`date +%Y%m%d_%H%M`.tar.gz
+  if [ -f 'Makefile' ]; then make clean; fi
+  (builtin cd ..;
+  tar --no-recursion -zcvf ${F} $D/*(^/);
   builtin cd -)
   echo "saved: ${F}"
 }
