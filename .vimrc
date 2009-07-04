@@ -116,7 +116,7 @@ nnoremap <C-O> <C-O>zz
 " yank to line end
 nnoremap Y y$
 
-" replace selection by register
+" replace selection with register
 nnoremap <silent> <C-K> :set opfunc=ReplaceMotion<CR>g@
 vnoremap <silent> <C-K> :<C-U>call ReplaceMotion('', 1)<CR>
 function! ReplaceMotion(type, ...)
@@ -124,8 +124,6 @@ function! ReplaceMotion(type, ...)
   let &selection = "inclusive"
   let reg_save = @@
   let mark_save = getpos("'a")
-
-  " get the end of the line (for motion including line end)
 
   if a:0 " visual mode
     silent exe "normal! '>$"
