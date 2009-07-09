@@ -210,19 +210,6 @@ inoremap <C-L> <C-O>A
 " emacs like C-K
 inoremap <C-K> <ESC>lDa
 
-" --------------------- commentout.vim ---------------------
-" lhs comments
-vmap ,/ :s/^/\/\//<CR>:nohlsearch<CR>:'<,'>s/^\/\//\1/e<CR>:noh<CR>
-vmap ," :s/^/\"/<CR>:nohlsearch<CR>:'<,'>s/^\"\"/\1/e<CR>:noh<CR>
-vmap ,% :s/^/%/<CR>:nohlsearch<CR>:'<,'>s/^%%/\1/e<CR>:noh<CR>
-vmap ,- :s/^/--/<CR>:nohlsearch<CR>:'<,'>s/^----/\1/e<CR>:noh<CR>
-vmap ,c :s/^\/\/\\|^--\\|^> \\|^[#"%!;]//<CR>:nohlsearch<CR>
-
-" " block comments
-vmap ,b v`<I<CR><esc>k0i/*<ESC>`>j0i*/<CR><esc><ESC>
-vmap ,h v`<I<CR><esc>k0i<!--<ESC>`>j0i--><CR><esc><ESC>
-
-
 "-----------------------------------------------------------
 " local settings
 silent! execute "source ~/.vim_localrc_" . system("echo -n $(hostname)")
