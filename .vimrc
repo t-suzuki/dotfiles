@@ -36,7 +36,7 @@ endif
 
 " auto open quickfix
 "----------------------------------------------------------
-autocmd QuickFixCmdPost make,grep,grepadd,vimgrep copen
+silent! autocmd QuickFixCmdPost make,grep,grepadd,vimgrep copen
 
 " filetype specific
 "----------------------------------------------------------
@@ -67,7 +67,11 @@ set ttymouse=xterm2
 set hlsearch
 set incsearch
 
+" for vim 6 to 7
 set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}%{winnr('$')>1?':'.winnr().'/'.winnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
+try | call winnr('$')
+catch | set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
+endtry
 
 set number
 set laststatus=2
