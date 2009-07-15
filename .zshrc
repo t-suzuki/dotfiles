@@ -1,3 +1,5 @@
+#!/usr/bin/zsh
+# -*- coding: utf-8 -*-
 # .zshrc written for 4.3.4 since 20071122
 #
 # vim:enc=utf8:
@@ -246,56 +248,79 @@ bindkey '^[[3~' delete-char-or-list # Del
 bindkey '^P' history-beginning-search-backward
 bindkey '^N' history-beginning-search-forward
 
-# directory up on Ctrl-6
-function cdup {
-  echo
-  cd ..
-  echo
-  zle reset-prompt
-}
-zle -N cdup
-bindkey '^\^' cdup
-
-# directory back on Ctrl-O
-function cdback {
-  if [ "$(printf '%d' "$BUFFER")" = "$BUFFER" ]; then
-    # back N level (reset)
+if [ ${ZSH_VERSION%.*} -gt 4.3 ]; then
+  # directory up on Ctrl-6
+  function cdup {
     echo
-    builtin cd +$BUFFER
-    echo
-    BUFFER=''
-    zle reset-prompt
-  else
-    # back 1 level (inline)
-    echo
-    builtin cd -
+    cd ..
     echo
     zle reset-prompt
-  fi
-}
-zle -N cdback
-bindkey '^O' cdback
+  }
+  zle -N cdup
+  bindkey '^\^' cdup
 
-# ls on single Enter
-function lsoraccept {
-  # BUG: use /usr/bin/test rather than builtin [ .
-  # calling [ in $CONTEXT = 'cont' will cause segv to zsh 4.3.4
-  if /usr/bin/test -z "$BUFFER"; then
-    echo
-    if [ $(/bin/ls|wc -l) -eq 0 ]; then
-      ls -AF --color=always
+  # directory back on Ctrl-O
+  function cdback {
+    if [ "$(printf '%d' "$BUFFER")" = "$BUFFER" ]; then
+      # back N level (reset)
+      echo
+      builtin cd +$BUFFER
+      echo
+      BUFFER=''
+      zle reset-prompt
     else
-      ls -F --color=always
+      # back 1 level (inline)
+      echo
+      builtin cd -
+      echo
+      zle reset-prompt
     fi
-    echo
-  else
-    zle accept-line
-  fi
-  # call reset-prompt outside the if-else-fi statement (to prepend showing 'for else>' in PS2)
-  zle reset-prompt
-}
-zle -N lsoraccept
-bindkey '^M' lsoraccept
+  }
+  zle -N cdback
+  bindkey '^O' cdback
+
+  # ls on single Enter
+  function lsoraccept {
+    # BUG: use /usr/bin/test rather than builtin [ .
+    # calling [ in $CONTEXT = 'cont' will cause segv to zsh 4.3.4
+    if /usr/bin/test -z "$BUFFER"; then
+      echo
+      if [ $(/bin/ls|wc -l) -eq 0 ]; then
+        ls -AF --color=always
+      else
+        ls -F --color=always
+      fi
+      echo
+    else
+      zle accept-line
+    fi
+    # call reset-prompt outside the if-else-fi statement (to prepend showing 'for else>' in PS2)
+    zle reset-prompt
+  }
+  zle -N lsoraccept
+  bindkey '^M' lsoraccept
+
+  # resume suspended job
+  function zlewidget-fg {
+    if [ -z "$(jobs)" ]; then
+      return
+    fi
+    if [ "$(printf '%d' "$BUFFER")" = "$BUFFER" ]; then
+      # fg %N
+      echo ''
+      builtin fg %$BUFFER
+      BUFFER=''
+      zle reset-prompt
+    else
+      # fg
+      echo ''
+      builtin fg
+      zle reset-prompt
+    fi
+  }
+  zle -N zlewidget-fg
+  bindkey '^Z' zlewidget-fg
+fi
 
 
 # complete from history ignoring leading (sudo, '|', man, which, ..) in current prompt
@@ -362,26 +387,6 @@ _quote-previous-word-in-double() {
 zle -N _quote-previous-word-in-double
 bindkey '^[d' _quote-previous-word-in-double
 
-# resume suspended job
-function zlewidget-fg {
-  if [ -z "$(jobs)" ]; then
-    return
-  fi
-  if [ "$(printf '%d' "$BUFFER")" = "$BUFFER" ]; then
-    # fg %N
-    echo ''
-    builtin fg %$BUFFER
-    BUFFER=''
-    zle reset-prompt
-  else
-    # fg
-    echo ''
-    builtin fg
-    zle reset-prompt
-  fi
-}
-zle -N zlewidget-fg
-bindkey '^Z' zlewidget-fg
 
 # ----------------------------------------
 # history
