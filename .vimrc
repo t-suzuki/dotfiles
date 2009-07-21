@@ -107,7 +107,7 @@ nnoremap <silent> <ESC><ESC> :noh<CR>
 "nnoremap k gk
 
 " move to the center of the line
-noremap <silent> gm :<C-U>exe 'normal '.(virtcol('$')/2).'\|'<CR>
+noremap <expr> gm (virtcol('$')/2).'\|'
 
 " insert CR
 nnoremap <C-J> o<ESC>
