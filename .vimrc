@@ -106,6 +106,9 @@ nnoremap <silent> <ESC><ESC> :noh<CR>
 "nnoremap j gj
 "nnoremap k gk
 
+" move to the center of the line
+noremap <silent> gm :<C-U>exe 'normal '.(virtcol('$')/2).'\|'<CR>
+
 " insert CR
 nnoremap <C-J> o<ESC>
 "nnoremap <CR> o<ESC> " not good for quickfix window
@@ -119,36 +122,6 @@ nnoremap <C-O> <C-O>zz
 
 " yank to line end
 nnoremap Y y$
-
-" replace selection with register
-nnoremap <silent> <C-K> :set opfunc=ReplaceMotion<CR>g@
-vnoremap <silent> <C-K> :<C-U>call ReplaceMotion('', 1)<CR>
-function! ReplaceMotion(type, ...)
-  let sel_save = &selection
-  let &selection = "inclusive"
-  let reg_save = @@
-  let mark_save = getpos("'a")
-
-  if a:0 " visual mode
-    silent exe "normal! '>$"
-    if getpos("'>") == getpos('.')
-      silent exe 'normal! `<"_d`>"_d$"0p`<'
-    else
-      silent exe 'normal! `>lma`<"_d`a"0P`<'
-    endif
-  elseif a:type == 'char' " char motion
-    silent exe "normal! ']$"
-    if getpos("']") == getpos('.')
-      silent exe 'normal! `["_d`]"_d$"0p`['
-    else
-      silent exe 'normal! `]lma`["_d`a"0P`['
-    endif
-  endif
-
-  let &selection = sel_save
-  let @@ = reg_save
-  call setpos("'a", mark_save)
-endfunction
 
 " exit
 nnoremap QQ :qa<CR>
