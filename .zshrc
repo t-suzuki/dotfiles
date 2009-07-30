@@ -248,7 +248,7 @@ bindkey '^[[3~' delete-char-or-list # Del
 bindkey '^P' history-beginning-search-backward
 bindkey '^N' history-beginning-search-forward
 
-if [ ${ZSH_VERSION%.*} -gt 4.3 ]; then
+if [ $((${ZSH_VERSION%.*}>=4.3)) -eq 1 ]; then
   # directory up on Ctrl-6
   function cdup {
     echo
