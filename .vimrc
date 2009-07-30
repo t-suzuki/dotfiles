@@ -1,6 +1,7 @@
+" vim: fenc=utf8 ts=2 sw=2 :
+
 " syntax and colors
 " ------------------------------------------------------------
-
 if has("syntax")
   syntax on
 
@@ -13,6 +14,7 @@ if has("syntax")
 
   " 256color settings
   if &term=='xterm-256color' || &term=='xterm-debian'
+    colorscheme ron
     silent! colorscheme orangeocean256
     "highlight Normal ctermbg=none
     "highlight NonText ctermbg=none
@@ -23,6 +25,22 @@ if has("syntax")
     highlight CursorColumn cterm=none ctermbg=none guibg=black
   endif
 
+  if 0
+  function! StressSyntaxSymbol()
+    syntax match SyntaxSymbol /[!%^&()+|~[\]{};:,.<>?=-]/
+    highlight SyntaxSymbol term=bold gui=bold
+
+    syntax match JISX0208Space display '\u3000' containedin=ALL
+    highlight JISX0208Space cterm=underline ctermfg=lightblue guibg=white
+  endf
+  " [  ]
+  augroup sss
+    autocmd! sss
+    autocmd BufNewFile,BufRead * call StressSyntaxSymbol()
+    autocmd BufNewFile,BufRead * match JISX0208Space "\u3000"
+  augroup END
+  endif
+
   " カレントウィンドウにのみ罫線を引く
   augroup cch
     autocmd! cch
@@ -31,6 +49,9 @@ if has("syntax")
     " PHPで重いので使わない
     autocmd WinEnter,BufRead *.php set nocursorcolumn nocursorline
   augroup END
+
+  highlight CursorLine ctermbg=darkblue guibg=#362231
+  highlight CursorColumn ctermbg=darkblue guibg=#362231
 endif
 
 
@@ -38,19 +59,31 @@ endif
 "----------------------------------------------------------
 silent! autocmd QuickFixCmdPost make,grep,grepadd,vimgrep copen
 
-" filetype specific
+" filetype
 "----------------------------------------------------------
 filetype plugin indent on
-autocmd FileType python set ts=4 sts=4 sw=4 noet noci si ai cinwords=if,elif,else,for,while,try,except,finally,def,class,with indentkeys+=#
+autocmd FileType python set ts=4 sts=4 sw=4 noet noci si ai 
+      \cinwords=if,elif,else,for,while,try,except,finally,def,class,with indentkeys+=#
+
 autocmd FileType haskell set ts=2 sts=2 sw=2 et noci si ai indentkeys+=0--
 
-" tab
+let php_sql_query=1
+let php_htmlInStrings=1
+let php_folding=1
+autocmd FileType php set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+
+" autocmd BufNewFile,BufRead *.c,*.h,*.cpp,*.java,*.php inoremap {{{ {<CR><CR>}<Esc>k<Tab>
+" autocmd BufRead *.c,*.h,*.cpp if search('<GL','n')>0|set dict=$VIMRUNTIME/dict/gl.dict|endif
+
+" tabs, special chars
 "----------------------------------------------------------
-set et ts=2 sw=2 sts=2
+set expandtab tabstop=2 shiftwidth=2 softtabstop=2
 set list listchars=tab:>-,eol:$,trail:*
 
-" edit
+" edit & looks
 "-----------------------------------------------------------
+set number
+set scrolloff=5
 set autoindent
 set cindent
 set backspace=indent,eol,start
@@ -58,41 +91,70 @@ set showmatch " show matching parentheses
 set wildmenu
 set formatoptions+=mM
 set ambiwidth=double " for UTF-8 kigou
+set hidden
 
 " use mouse in terminal
 set mouse=a
 set ttymouse=xterm2
 
-" highlight, incremental
-set hlsearch
-set incsearch
-
-" for vim 6 to 7
-set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}%{winnr('$')>1?':'.winnr().'/'.winnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
-try | call winnr('$')
-catch | set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
-endtry
-
-set number
-set laststatus=2
-
-set termencoding=utf-8
-set encoding=utf-8
-set fileencodings=utf-8,iso-2022-jp,cp932,euc-jp
-set fenc=utf-8
-
-set browsedir=current
-set shellslash
-
-set scrolloff=5
-
 " 画面最下行の行を出来るだけ表示
 set display=lastline
 
-" completion
+" command line, status, title
 "-----------------------------------------------------------
-" for autocomplpop.vim: close menu and new line
-inoremap <expr> <CR> pumvisible()?"\<C-Y>\<CR>":"\<CR>"
+set cmdheight=2
+set showcmd
+set laststatus=2
+set title
+au BufEnter * let &titlestring='%m '.expand("%:t")
+
+" for vim 6 to 7
+set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}%{winnr('$')>1?':
+      \'.winnr().'/'.winnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.
+      \(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
+try | call winnr('$')
+catch |
+  set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.
+        \(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
+endtry
+
+" search
+"-----------------------------------------------------------
+set hlsearch
+set incsearch
+set smartcase
+set wrapscan
+
+" windows
+"-----------------------------------------------------------
+set nosplitbelow
+set splitright
+
+" misc
+"-----------------------------------------------------------
+
+" bells
+set noerrorbells
+set visualbell
+set t_vb=
+
+" encodings
+set termencoding=utf-8
+set encoding=utf-8
+if has('win32')
+  set fileencodings=cp932,iso-2022-jp,euc-jp,utf-8
+else
+  set fileencodings=utf-8,iso-2022-jp,cp932,euc-jp
+endif
+set fenc=utf-8
+
+" browse
+set browsedir=current
+set shellslash
+
+" fold
+set foldmethod=indent
+set foldlevelstart=99
 
 "-----------------------------------------------------------
 " keymaps
@@ -101,10 +163,6 @@ inoremap <expr> <CR> pumvisible()?"\<C-Y>\<CR>":"\<CR>"
 " ========================= normal mode
 " noh on ESCs
 nnoremap <silent> <ESC><ESC> :noh<CR>
-
-" graphical j/k (dangerous for scripts)
-"nnoremap j gj
-"nnoremap k gk
 
 " move to the center of the line
 noremap <expr> gm (virtcol('$')/2).'\|'
@@ -187,7 +245,52 @@ inoremap <C-L> <C-O>A
 " emacs like C-K
 inoremap <C-K> <ESC>lDa
 
+"=====================================================================
+" plugin settings
+"=====================================================================
+
+" VIM-LaTeX
+" http://vim-latex.sourceforge.net/index.php
 "-----------------------------------------------------------
+set shellslash
+if has('win32')
+  set grepprg=grep\ -nH\ $*
+  function! VimLaTeXInit()
+    set noguipty " for dviout in gVim
+    if &guioptions !~# 'm'
+      set guioptions+=m
+    endif
+    let g:Tex_CompileRule_dvi='platex -src-specials -interaction=nonstopmode'
+    let g:Tex_CompileRule_pdf='pdflatex -interaction=nonstopmode' " not working
+    let g:Tex_CompileRule_ps='dvipsv -D600' " not working
+    let g:Tex_DefaultTargetFormat = 'dvi'
+    let g:Tex_ViewRule_dvi='dviout -1'
+    let g:Tex_ViewRule_ps='gsview' " not working
+    let g:Tex_ViewRule_pdf='f:\app\file\foxitreader\foxit reader.exe' " not working
+  endf
+  augroup vimlatexinit
+    autocmd! vimlatexinit
+    autocmd BufNewFile,BufRead *.tex setf tex_latexSuite|call VimLaTeXInit()
+    autocmd BufNewFile *.tex <buffer> set enc=cp932
+  augroup END
+endif
+
+" 2html
+"-----------------------------------------------------------
+let g:html_use_css=1
+let g:html_use_xhtml=1
+
+" autocomplpop
+"-----------------------------------------------------------
+" on Enter - close menu and new line
+inoremap <expr> <CR> pumvisible()?"\<C-E>\<CR>":"\<CR>"
+let g:AutoComplPop_IgnoreCaseOption=0
+
+" changelog
+" ------------------------------------------------------------
+let g:changelog_timeformat="%Y-%m-%d %H:%M:%S"
+
+"=====================================================================
 " local settings
 silent! execute "source ~/.vim_localrc_" . system("echo -n $(hostname)")
 
