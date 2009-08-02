@@ -5,6 +5,10 @@ if has('syntax')
   silent! colorscheme orangeocean256gui
 endif
 
+"-----------------------------------------------------------
+" no (visual) bell
+set visualbell t_vb=
+
 " window perferences
 "-----------------------------------------------------------
 set guioptions-=T
