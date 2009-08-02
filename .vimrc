@@ -102,21 +102,16 @@ set display=lastline
 
 " command line, status, title
 "-----------------------------------------------------------
-set cmdheight=2
+set cmdheight=1
 set showcmd
 set laststatus=2
 set title
 au BufEnter * let &titlestring='%m '.expand("%:t")
 
 " for vim 6 to 7
-set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}%{winnr('$')>1?':
-      \'.winnr().'/'.winnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.
-      \(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
-try | call winnr('$')
-catch |
-  set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.
-        \(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
-endtry
+if v:version>700 | set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}%{winnr('$')>1?':'.winnr().'/'.winnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
+else | set statusline=\[%n%{bufnr('$')>1?'/'.bufnr('$'):''}\]\ %<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l/%L,%c%V%8P
+endif
 
 " search
 "-----------------------------------------------------------
@@ -289,6 +284,17 @@ let g:AutoComplPop_IgnoreCaseOption=0
 " changelog
 " ------------------------------------------------------------
 let g:changelog_timeformat="%Y-%m-%d %H:%M:%S"
+
+" QFixHowm
+" http://sites.google.com/site/fudist/Home/qfixhowm/
+" ------------------------------------------------------------
+if filereadable($HOME.'/.vim/qfixapp/plugin/myhowm.vim')
+  set runtimepath+=$HOME/.vim/qfixapp
+  let howm_dir='~/howm'
+  let howm_filename='%Y/%m/%Y%m%d-%H%M%S.howm'
+  let howm_fileencoding='utf-8'
+  let howm_fileformat='unix'
+endif
 
 "=====================================================================
 " local settings
