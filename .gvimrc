@@ -55,4 +55,12 @@ endif
 " for KaoriYa vim
 let g:no_gvimrc_example = 1
 
+if has('unix')
+  " ------------------------------------------------------------
+  " gVimのメニュー文字化け対策
+  source $VIMRUNTIME/delmenu.vim
+  set langmenu=menu_ja_jp.utf-8.vim
+  source $VIMRUNTIME/menu.vim
+endif
+
 " vim: fenc=utf8 ts=2 sw=2 :
