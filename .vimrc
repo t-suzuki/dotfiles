@@ -288,9 +288,16 @@ let g:changelog_timeformat="%Y-%m-%d %H:%M:%S"
 " QFixHowm
 " http://sites.google.com/site/fudist/Home/qfixhowm/
 " ------------------------------------------------------------
-if filereadable($HOME.'/.vim/qfixapp/plugin/myhowm.vim')
-  set runtimepath+=$HOME/.vim/qfixapp
+if has('win32')
+  let $HOWM_INSTALL_DIR=$VIMRUNTIME.'/qfixapp'
+  let howm_dir='F:/home/howm'
+else
+  let $HOWM_INSTALL_DIR=$HOME.'/.vim/qfixapp'
   let howm_dir='~/howm'
+endif
+
+if filereadable($HOWM_INSTALL_DIR.'/plugin/myhowm.vim')
+  set runtimepath+=$HOWM_INSTALL_DIR
   let howm_filename='%Y/%m/%Y%m%d-%H%M%S.howm'
   let howm_fileencoding='utf-8'
   let howm_fileformat='unix'
