@@ -26,7 +26,7 @@ if has('win32')
         \ＭＳ_ゴシック:h9:cSHIFTJIS
 else
   set lines=35 columns=100
-  set guifont=Bitstream\ Vera\ Sans\ Mono\ 11,さざなみゴシック\ Medium\ 10,
+  set guifont=Bitstream\ Vera\ Sans\ Mono\ 10,さざなみゴシック\ Medium\ 10,
         \M+2VM+IPAG\ circle\ 10,Kochi\ Gothic\ 10
 endif
 
