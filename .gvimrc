@@ -56,6 +56,11 @@ if has('win32')
   endfunction
 endif
 
+" Disable autocomplpop.vim in linux gvim (bug with SCIM-Anthy)
+if has('unix') && has('gui') && exists('g:AutoComplPop_NotEnableAtStartup')
+  AutoComplPopDisable
+endif
+
 " for KaoriYa vim
 let g:no_gvimrc_example = 1
 
