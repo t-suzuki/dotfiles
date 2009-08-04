@@ -127,6 +127,7 @@ set splitright
 
 " misc
 "-----------------------------------------------------------
+set modeline
 
 " bells
 set noerrorbells
