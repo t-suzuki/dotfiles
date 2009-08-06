@@ -177,6 +177,11 @@ nnoremap <C-O> <C-O>zz
 " yank to line end
 nnoremap Y y$
 
+" close fold on <Left> at the head of a line
+nnoremap <expr> h foldlevel(getpos('.')[1])>0 &&
+      \(getpos('.')[2]==1 \|\|
+      \getline('.')[: getpos('.')[2]-2] =~ "^[\<TAB> ]*$" )?"zch":"h"
+
 " exit
 nnoremap QQ :qa<CR>
 
