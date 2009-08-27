@@ -170,7 +170,7 @@ function ll {
 
 function cd {
   if ! builtin cd 2>/dev/null $@; then
-    echo "$fg[yellow]cannot cd: : $@$reset_color"
+    echo "$fg[yellow]cannot cd: $@$reset_color"
     return
   fi
   if [ "$?" -eq 0 ]; then
