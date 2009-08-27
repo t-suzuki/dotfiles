@@ -1,0 +1,20 @@
+TARGETS=
+CXX=g++
+CFLAGS=-g -Wall -O0
+LIBS=-lm -lpthread
+# LIBS+=-lcv -lcvaux -lcxcore -lhighgui
+# LIBS+=-lboost_program_options-mt
+# LIBS+=-lboost_thread-mt
+
+.PHONY: all clean
+.SUFFIXES: .cpp .o
+
+all: $(TARGETS)
+clean:
+	rm -f *.o $(TARGETS)
+
+.cpp.o:
+	$(CXX) -c $^ $(CFLAGS) $(LIBS)
+
+# TARGETS
+
