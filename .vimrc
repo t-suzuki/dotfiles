@@ -64,7 +64,6 @@ silent! autocmd QuickFixCmdPost make,grep,grepadd,vimgrep copen
 filetype plugin indent on
 autocmd FileType python set ts=4 sts=4 sw=4 noet noci si ai 
       \cinwords=if,elif,else,for,while,try,except,finally,def,class,with indentkeys+=#
-autocmd BufNewFile *.py 0r ~/.vim/skeleton/python_normal.py
 
 autocmd FileType haskell set ts=2 sts=2 sw=2 et noci si ai indentkeys+=0--
 
