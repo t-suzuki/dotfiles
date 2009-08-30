@@ -1,5 +1,6 @@
 /******************************************************************************
- * \file 
+ * \file   @{@expand('%:t')@}@
+ * \date   @{@strftime('%Y-%m-%d')@}@
  * \brief
  * \author
  *****************************************************************************/
@@ -8,11 +9,11 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
-class Class {
+class @{@expand('%:r')@}@ {
 public:
   // methods
-  Class();
-  virtual ~Class();
+  @{@expand('%:r')@}@();
+  virtual ~@{@expand('%:r')@}@();
 
 private:
   // data members
