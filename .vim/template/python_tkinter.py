@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # Document: {{{1
-# Title:
+# Title: @{@expand('%:t')@}@
 # Requirements:
 #   Python
 # Description: {{{2
@@ -10,7 +10,7 @@
 # Author:
 # Website:
 # History: {{{2
-#
+#   @{@strftime('%Y%m%d')@}@:
 # }}}
 # License: MIT License {{{2
 # Copyright (c) @{@strftime('%Y')@}@ <Author>

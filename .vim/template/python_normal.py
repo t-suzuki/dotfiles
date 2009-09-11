@@ -13,7 +13,7 @@
 #   @{@strftime('%Y%m%d')@}@:
 # }}}
 # License: MIT License {{{2
-# Copyright (c) <Year> <Author>
+# Copyright (c) @{@strftime('%Y')@}@ <Author>
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
