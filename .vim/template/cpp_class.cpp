@@ -9,11 +9,11 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
-class @{@expand('%:r')@}@ {
+class @{@expand('%:t:r')@}@ {
 public:
   // methods
-  @{@expand('%:r')@}@();
-  virtual ~@{@expand('%:r')@}@();
+  @{@expand('%:t:r')@}@();
+  virtual ~@{@expand('%:t:r')@}@();
 
 private:
   // data members
