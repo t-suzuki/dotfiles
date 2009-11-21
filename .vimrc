@@ -214,6 +214,19 @@ nnoremap <silent> gN :<C-U>call search(@/, 'b')<CR>:<C-U>call search(@/, 'ces')<
 nmap     <silent> n  gn<ESC>
 nmap     <silent> N  gN<ESC>
 
+" go to the first non-comment nor a blank line
+function! GotoFirstEffectiveLine()
+  normal gg
+  while line(".")<line("$") && (
+        \ getline(".") =~ '^\s*$'
+        \ || synIDattr(synID(line("."), col("."), 0), "name") =~ ".*Comment$"
+        \ )
+    normal j0
+  endwhile
+  exe "normal z\<CR>"
+endfunction
+nnoremap gG :<C-U>silent! call GotoFirstEffectiveLine()<CR>
+
 " ========================= visual mode
 " select to line end
 vnoremap v $h
