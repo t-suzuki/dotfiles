@@ -36,7 +36,7 @@ function exists {
 # import PATH from other shell's rc files
 local paths=':'
 local exports=':'
-PATH=/bin:/usr/bin:/usr/local/bin
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
 for rcfile in ~/.profile ~/.bashrc ~/.bash_profile; do
   if [ -r $rcfile ]; then
     paths="$paths; $(sed '/^[[:space:]]*PATH=/{s/^[[:space:]]*//;s/$/; /;p};d' $rcfile)"
