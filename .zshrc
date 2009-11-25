@@ -247,6 +247,14 @@ bindkey '^U' backward-kill-line
 bindkey '^[[3~' delete-char-or-list # Del
 bindkey '^P' history-beginning-search-backward
 bindkey '^N' history-beginning-search-forward
+bindkey '^[[Z' reverse-menu-complete # Shift+TAB
+
+# insert `date` for YYYYMMDD-HHMMSS on F5
+function insert_datetime {
+  LBUFFER=$LBUFFER'$(date +%Y%m%d-%H%M%S)'
+}
+zle -N insert_datetime
+bindkey '^[[15~' insert_datetime
 
 if [ $((${ZSH_VERSION%.*}>=4.3)) -eq 1 ]; then
   # directory up on Ctrl-6
