@@ -225,7 +225,7 @@ function! GotoFirstEffectiveLine()
   endwhile
   exe "normal z\<CR>"
 endfunction
-nnoremap gG :<C-U>silent! call GotoFirstEffectiveLine()<CR>
+nnoremap <silent> gG :<C-U>call GotoFirstEffectiveLine()<CR>
 
 " ========================= visual mode
 " select to line end
