@@ -193,6 +193,9 @@ nnoremap <S-Tab> :bp<CR>
 " window prev (ref: window next: C-W C-W)
 nnoremap <C-W><C-P> <C-W><S-W>
 
+" vertical split and goto file
+nnoremap <C-W><C-F> :<C-U>vs<CR>gf
+
 " tab
 nnoremap <C-?>c :tabnew<CR>
 nnoremap <C-?>d :tabclose<CR>
@@ -216,14 +219,16 @@ nmap     <silent> N  gN<ESC>
 
 " go to the first non-comment nor a blank line
 function! GotoFirstEffectiveLine()
-  normal gg
-  while line(".")<line("$") && (
-        \ getline(".") =~ '^\s*$'
-        \ || synIDattr(synID(line("."), col("."), 0), "name") =~ ".*Comment$"
+  let l:c = 0
+  while l:c<line("$") && (
+        \ getline(l:c) =~ '^\s*$'
+        \ || synIDattr(synID(l:c, 1, 0), "name") =~ ".*Comment.*"
+        \ || synIDattr(synID(l:c, 1, 0), "name") =~ ".*PreProc$"
         \ )
-    normal j0
+    let l:c = l:c+1
   endwhile
-  exe "normal z\<CR>"
+  echo "normal ".l:c."Gz"
+  exe "normal ".l:c."Gz\<CR>"
 endfunction
 nnoremap <silent> gG :<C-U>call GotoFirstEffectiveLine()<CR>
 
