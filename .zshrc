@@ -59,9 +59,6 @@ export EDITOR=vim
 # C-wで単語の一部と見なす記号
 export WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 
-# svn
-export rep=file:///var/svn/
-
 # ----------------------------------------
 # terminal specific
 case $TERM in;
@@ -223,6 +220,7 @@ function backup {
   (builtin cd ..;
   tar zcvf ${F} $D;
   builtin cd -)
+  if [ $# -ge 1 ]; then mv ${F} "$1/"; fi
   echo "saved: ${F}"
 }
 
@@ -234,6 +232,7 @@ function slimbackup {
   (builtin cd ..;
   tar --no-recursion -zcvf ${F} $D/*(^/);
   builtin cd -)
+  if [ $# -ge 1 ]; then mv ${F} "$1/"; fi
   echo "saved: ${F}"
 }
 
@@ -473,7 +472,7 @@ function prompt {
     local C_USERHOST="%{$bg[white]$fg[magenta]%}"
     local C_PROMPT="%{$fg[magenta]%}"
   else
-    local C_USERHOST="%{$fg[cyan]%}"
+    local C_USERHOST="%{$bg[black]$fg[cyan]%}"
     local C_PROMPT="%{$fg[cyan]%}"
   fi
   local C_PRE="%{$reset_color%}%{$fg[cyan]%}"
