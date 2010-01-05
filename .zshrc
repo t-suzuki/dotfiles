@@ -118,6 +118,7 @@ alias mv='mv -i'
 alias quit='exit'
 alias ':q'='exit'
 alias w3m='w3m -O ja_JP.UTF-8'
+alias make="make -j$(cat /proc/cpuinfo | grep '^processor' | wc -l)"
 # 'go'mi = trash (apt-get install trash-cli)
 if exists trash; then
   alias go='trash'
