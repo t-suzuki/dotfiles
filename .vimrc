@@ -217,6 +217,10 @@ nnoremap <silent> gN :<C-U>call search(@/, 'b')<CR>:<C-U>call search(@/, 'ces')<
 nmap     <silent> n  gn<ESC>
 nmap     <silent> N  gN<ESC>
 
+" quickfix next/prev
+nmap <silent> <ESC>n :<C-U>cn<CR>
+nmap <silent> <ESC>p :<C-U>cp<CR>
+
 " go to the first non-comment nor a blank line
 function! GotoFirstEffectiveLine()
   let l:c = 0
