@@ -221,21 +221,6 @@ nmap     <silent> N  gN<ESC>
 nmap <silent> <ESC>n :<C-U>cn<CR>
 nmap <silent> <ESC>p :<C-U>cp<CR>
 
-" go to the first non-comment nor a blank line
-function! GotoFirstEffectiveLine()
-  let l:c = 0
-  while l:c<line("$") && (
-        \ getline(l:c) =~ '^\s*$'
-        \ || synIDattr(synID(l:c, 1, 0), "name") =~ ".*Comment.*"
-        \ || synIDattr(synID(l:c, 1, 0), "name") =~ ".*PreProc$"
-        \ )
-    let l:c = l:c+1
-  endwhile
-  echo "normal ".l:c."Gz"
-  exe "normal ".l:c."Gz\<CR>"
-endfunction
-nnoremap <silent> gG :<C-U>call GotoFirstEffectiveLine()<CR>
-
 " ========================= visual mode
 " select to line end
 vnoremap v $h
