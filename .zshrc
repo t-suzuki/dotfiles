@@ -5,6 +5,7 @@
 # vim:enc=utf8:
 #
 # history:
+#   20100217: lsoracceptがOS X(BSD系一般?)で効かない問題に対処 (thanks to K.T)
 #   20090701: for文などの継続入力時のlsoracceptで落ちる問題を暫定解決
 #   20090624: sudoや|を無視して補完候補を履歴から探すsmart-search-history
 #   20090620: 微修正. ホストローカルな設定
@@ -106,7 +107,7 @@ else
     alias ls='ls --color=auto -Fh'
     alias l='ls --color=auto -FAlh'
     ;;
-  'FreeBSD')
+  'FreeBSD'|'Darwin')
     alias ls='ls -GFh'
     alias l='ls -GFAlh'
     export LSCOLORS='ExfxcxdxBxegedabagacad'
@@ -292,16 +293,18 @@ if [ $((${ZSH_VERSION%.*}>=4.3)) -eq 1 ]; then
   zle -N cdback
   bindkey '^O' cdback
 
+  LSORACCEPT_TEST=/bin/test
+  if [ ! -x $LSORACCEPT_TEST ]; then LSORACCEPT_TEST=/usr/bin/test; fi
   # ls on single Enter
   function lsoraccept {
     # BUG: use /usr/bin/test rather than builtin [ .
     # calling [ in $CONTEXT = 'cont' will cause segv to zsh 4.3.4
-    if /usr/bin/test -z "$BUFFER"; then
+    if $LSORACCEPT_TEST -z "$BUFFER"; then
       echo
-      if [ $(/bin/ls|wc -l) -eq 0 ]; then
-        ls -AF --color=always
+      if $LSORACCEPT_TEST $(/bin/ls|wc -l) -eq 0; then
+        ls -A
       else
-        ls -F --color=always
+        ls
       fi
       echo
     else
