@@ -1,10 +1,14 @@
 TARGETS=
 CXX=g++
-CFLAGS=-g -Wall -O0
-LIBS=-lm -lpthread
-# LIBS+=-lcv -lcvaux -lcxcore -lhighgui
-# LIBS+=-lboost_program_options-mt
-# LIBS+=-lboost_thread-mt
+CFLAGS=-g -Wall -O3
+LDLIBS=-lm -lpthread
+# CFLAGS+=`pkg-config opencv --cflags`
+# LDLIBS+=`pkg-config opencv --libs`
+# LDLIBS+=-lboost_program_options-mt
+# LDLIBS+=-lboost_filesystem-mt
+# LDLIBS+=-lboost_thread-mt
+# CFLAGS+=`python-config --cflags`
+# LDLIBS+=-lboost_python-mt `python-config --libs`
 
 .PHONY: all clean
 .SUFFIXES: .cpp .o
@@ -14,7 +18,8 @@ clean:
 	rm -f *.o $(TARGETS)
 
 .cpp.o:
-	$(CXX) -c $^ $(CFLAGS) $(LIBS)
+	$(CXX) -c $^ $(CFLAGS) $(LDLIBS)
 
-# TARGETS
-
+## TARGETS
+# target:
+# 	$(CXX) -o $@ $^ $(CFLAGS) $(LDLIBS)
