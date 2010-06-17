@@ -5,6 +5,7 @@
 # vim:enc=utf8:
 #
 # history:
+#   20100617: Mac OS X Darwin上で動作するよう修正 (thanks to k.takenaka), 個人設定(~/.zsh_individualrc)
 #   20100217: lsoracceptがOS X(BSD系一般?)で効かない問題に対処 (thanks to K.T)
 #   20090701: for文などの継続入力時のlsoracceptで落ちる問題を暫定解決
 #   20090624: sudoや|を無視して補完候補を履歴から探すsmart-search-history
@@ -38,10 +39,16 @@ function exists {
 local paths=':'
 local exports=':'
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
+
+# for Mac OS
+if exists gsed; then
+  alias sed='gsed'
+fi
+
 for rcfile in ~/.profile ~/.bashrc ~/.bash_profile; do
   if [ -r $rcfile ]; then
-    paths="$paths; $(sed '/^[[:space:]]*PATH=/{s/^[[:space:]]*//;s/$/; /;p};d' $rcfile)"
-    exports="$exports; $(sed '/^[[:space:]]*export PATH/{s/^[[:space:]]*//;s/$/; /;p};d' $rcfile)"
+    paths="$paths; $(sed '/^[[:space:]]*PATH=/{s/^[[:space:]]*//;s/$/; /;p}; d' $rcfile)"
+    exports="$exports; $(sed '/^[[:space:]]*export PATH/{s/^[[:space:]]*//;s/$/; /;p}; d' $rcfile)"
   fi
 done
 eval $paths
@@ -67,8 +74,6 @@ case $TERM in;
     export LANG=ja_JP.SJIS
     export LC_ALL=C
     export SHELL=/usr/local/bin/zsh
-    export PATH="/java/jdk1.6.0_03/bin:$PATH"
-    export PATH="/cygdrive/f/app/prog/ghc/bin:$PATH"
   ;;
 
   *)
@@ -94,6 +99,11 @@ case $TERM in;
   ;;
 esac
 
+# add "setenv SCREEN=1" in .screenrc
+if [ "${SCREEN}x" = "1x" ]; then
+  export LANG=C
+fi
+
 # ----------------------------------------
 # aliases
 setopt completealiases
@@ -116,10 +126,11 @@ else
   export LV='-Ou8 -c'
 fi
 alias mv='mv -i'
+alias rm='rm -i'
 alias quit='exit'
 alias ':q'='exit'
 alias w3m='w3m -O ja_JP.UTF-8'
-alias make="make -j$(cat /proc/cpuinfo | grep '^processor' | wc -l)"
+alias maxmake="make -j$(cat /proc/cpuinfo | grep '^processor' | wc -l)"
 # 'go'mi = trash (apt-get install trash-cli)
 if exists trash; then
   alias go='trash'
@@ -136,11 +147,11 @@ alias -g ....='../../../'
 alias -g .....='../../../../'
 alias man='man'
 alias jman="LC_MESSAGES=$LANG man"
-alias -g F='| grep -i'
-alias -g GG='| xargs -0 grep -i'
-alias -g G=' 2>&1 | grep -i'
-alias -g L=" 2>&1 | $PAGER"
-alias -g V=" 2>&1 | vim -R -"
+alias -g F='|grep -i'
+alias -g GG='|xargs -0 grep -i'
+alias -g G='2>&1|grep -i'
+alias -g L="2>&1|$PAGER"
+alias -g V="2>&1|vim -R -"
 # clipboard (requires xsel which can be installed by "sudo aptitude install xsel")
 if exists xsel; then
   alias -g   B=" | xsel -bi" # stdout => clip
@@ -293,20 +304,21 @@ if [ $((${ZSH_VERSION%.*}>=4.3)) -eq 1 ]; then
   zle -N cdback
   bindkey '^O' cdback
 
-  LSORACCEPT_TEST=/bin/test
-  if [ ! -x $LSORACCEPT_TEST ]; then LSORACCEPT_TEST=/usr/bin/test; fi
   # ls on single Enter
+  if exists /usr/bin/test; then TESTPATH=/usr/bin/test
+  else TESTPATH=/bin/test; fi
   function lsoraccept {
     # BUG: use /usr/bin/test rather than builtin [ .
     # calling [ in $CONTEXT = 'cont' will cause segv to zsh 4.3.4
-    if $LSORACCEPT_TEST -z "$BUFFER"; then
+    if $TESTPATH -z "$BUFFER"; then
       echo
-      if $LSORACCEPT_TEST $(/bin/ls|wc -l) -eq 0; then
-        ls -A
+      if $TESTPATH $(/bin/ls|wc -l) -eq 0; then
+        ls -AF
       else
         ls
       fi
       echo
+      echo -n -e "\n\n\033[2A"
     else
       zle accept-line
     fi
@@ -432,19 +444,22 @@ setopt noflowcontrol # no C-S C-Q
 # insert '(*)' into the head of window title while a command is running
 # in job: "(*) path [name@host]"
 # finish: "path [name@host]"
+
 case "$TERM" in
   kterm*|xterm*)
-    function precmd_title { #function chpwd {
+    function precmd_title {
       # called in precmd
+      print -Pn "\e]0;%m\a"
       print -Pn "\e]2;%~ [%n@%m]\a"
     }
     function preexec {
+      print -Pn "\e]0;* %m\a"
       print -Pn "\e]2;(*)%~ [%n@%m]\a"
     }
   ;;
   *)
-  function precmd_title {
-  }
+    function precmd_title {
+    }
   ;;
 esac
 
@@ -539,6 +554,9 @@ compctl -b bindkey
 compdef -d java
 
 _cache_hosts=(localhost $HOST)
+
+# include ~/.zsh_individualrc if exists
+test -r ~/.zsh_individualrc && source ~/.zsh_individualrc && echo "individual settings loaded."
 
 # include ~/.zsh_localrc if exists
 local localzshrc=~/.zsh_localrc_$(basename $(hostname))
