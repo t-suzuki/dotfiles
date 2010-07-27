@@ -152,6 +152,7 @@ alias -g GG='|xargs -0 grep -i'
 alias -g G='2>&1|grep -i'
 alias -g L="2>&1|$PAGER"
 alias -g V="2>&1|vim -R -"
+alias O='gnome-open'
 # clipboard (requires xsel which can be installed by "sudo aptitude install xsel")
 if exists xsel; then
   alias -g   B=" | xsel -bi" # stdout => clip
@@ -419,8 +420,8 @@ bindkey '^[d' _quote-previous-word-in-double
 # ----------------------------------------
 # history
 HISTFILE=~/.zsh_history
-HISTSIZE=100000
-SAVEHIST=100000
+HISTSIZE=300000
+SAVEHIST=300000
 setopt appendhistory
 setopt histignorealldups
 setopt histnofunctions
