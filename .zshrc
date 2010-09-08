@@ -5,6 +5,7 @@
 # vim:enc=utf8:
 #
 # history:
+#   20100908: 指定した名前をもつプロセスをkill -9するkilljobs
 #   20100617: Mac OS X Darwin上で動作するよう修正 (thanks to k.takenaka), 個人設定(~/.zsh_individualrc)
 #   20100217: lsoracceptがOS X(BSD系一般?)で効かない問題に対処 (thanks to K.T)
 #   20090701: for文などの継続入力時のlsoracceptで落ちる問題を暫定解決
@@ -163,8 +164,6 @@ fi
 alias T='tail -n 50 -f'
 # short commands
 alias psp='ps -F ax'
-# kill -9 all suspended jobs
-alias killjobs="for pid in \$(jobs -dl | sed -r '/^\(/d;s/\[[0-9]+\][ +-]*([0-9]+).*/\1/g'); do kill -9 \$pid; done"
 # ssh-agent wrapper
 exists lazy-ssh-agent && eval `lazy-ssh-agent setup ssh scp sftp`
 
@@ -176,6 +175,13 @@ colors
 
 # ----------------------------------------
 # functions
+function killjobs {
+  # kill -9 all suspended jobs
+  for pid in $(jobs -dl | sed -r '/^\(/d;s/\[[0-9]+\][ +-]*([0-9]+).*'$1'.*/\1/gp;d'); do
+    kill -9 $pid
+   done
+}
+
 function ll {
   # super list
   l "$@" | $PAGER
