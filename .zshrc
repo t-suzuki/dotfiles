@@ -163,6 +163,8 @@ fi
 alias T='tail -n 50 -f'
 # short commands
 alias psp='ps -F ax'
+# kill -9 all suspended jobs
+alias killjobs="for pid in \$(jobs -dl | sed -r '/^\(/d;s/\[[0-9]+\][ +-]*([0-9]+).*/\1/g'); do kill -9 \$pid; done"
 # ssh-agent wrapper
 exists lazy-ssh-agent && eval `lazy-ssh-agent setup ssh scp sftp`
 
