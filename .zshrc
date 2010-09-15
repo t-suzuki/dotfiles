@@ -258,6 +258,31 @@ function slimbackup {
   echo "saved: ${F}"
 }
 
+# measure time.
+# usage:
+# $ Tic; heavy; Toc
+function Tic {
+  export LAST_TIC_TIME="$(date +%s)"
+  export LAST_TIC_DATE="$(date +%Y/%m/%d\ %H:%M:%S)"
+}
+
+function Toc {
+  CURRENT_TIME="$(date +%s)"
+  CURRENT_DATE="$(date +%Y/%m/%d\ %H:%M:%S)"
+  if [ x"$LAST_TIC_TIME" != "x" -a x"$LAST_TIC_DATE" != "x" ]; then
+    LAST_TIC_TIME=$LAST_TIC_TIME
+    LAST_TIC_DATE=$LAST_TIC_DATE
+  else
+    echo "Error. run Tic first"
+    return
+  fi
+  DIFF=$(($CURRENT_TIME-$LAST_TIC_TIME))
+  SEC=$(($DIFF % 60))
+  MIN=$(($DIFF / 60 % 60))
+  HOUR=$(($DIFF / 3600))
+  echo "elapsed time = $(printf "%02d:%02d:%02d" $HOUR $MIN $SEC)   [$LAST_TIC_DATE] => [$CURRENT_DATE]"
+}
+
 # ----------------------------------------
 # keybinds
 bindkey -e
