@@ -153,7 +153,6 @@ alias -g GG='|xargs -0 grep -i'
 alias -g G='2>&1|grep -i'
 alias -g L="2>&1|$PAGER"
 alias -g V="2>&1|vim -R -"
-alias O='gnome-open'
 # clipboard (requires xsel which can be installed by "sudo aptitude install xsel")
 if exists xsel; then
   alias -g   B=" | xsel -bi" # stdout => clip
@@ -175,6 +174,14 @@ colors
 
 # ----------------------------------------
 # functions
+function O {
+if [ $# -eq 0 ]; then 
+  gnome-open .
+else
+  gnome-open "$@"
+fi
+}
+
 function killjobs {
   # kill -9 all suspended jobs
   for pid in $(jobs -dl | sed -r '/^\(/d;s/\[[0-9]+\][ +-]*([0-9]+).*'$1'.*/\1/gp;d'); do
