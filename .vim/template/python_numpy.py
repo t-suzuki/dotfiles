@@ -40,20 +40,20 @@ import sys
 import numpy as N
 
 def main(): # {{{1
-	def parse_options():
-		from optparse import OptionParser
-		parser = OptionParser()
-		parser.add_option('-v', '--verbose',
-				action='store_true', dest='verbose', default=False,
-				help='show verbose messages')
-		options, args = parser.parse_args()
-		return options, args
+    def parse_options():
+        from optparse import OptionParser
+        parser = OptionParser()
+        parser.add_option('-v', '--verbose',
+                action='store_true', dest='verbose', default=False,
+                help='show verbose messages')
+        options, args = parser.parse_args()
+        return options, args
 
-	options, args = parse_options()
-	print options
-	# }}}
+    options, args = parse_options()
+    print options
+    # }}}
 
 if __name__=='__main__':
-	main()
+    main()
 
-# vim: set noet sts=4 ts=4 sw=4 fdm=marker fdl=0:
+# vim: set et sts=4 ts=4 sw=4 fdm=marker fdl=0:

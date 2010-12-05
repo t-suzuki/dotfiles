@@ -43,61 +43,61 @@ import tkFileDialog
 import Image, ImageTk
 
 class MainFrame(object, Tk.Frame): # {{{1
-	'''main Tk frame'''
-	def __init__(self, options, *av, **ak):
-		Tk.Frame.__init__(self, *av, **ak)
-		self.options = options
-		self.init()
-	def init(self): # {{{2
-		## root frame
-		self.master.title(u'test title')
-		self.master.geometry('+1400+100')
-		self.master.bind('<KeyPress-Escape>', lambda e: self.master.destroy())
-		## widgets
-		Tk.Button(self, text='open', command=self.open_file).pack()
-		Tk.Button(self, text='quit', command=self.master.destroy).pack()
-		self.pack()
-		# }}}
-	def open_file(self): # {{{2
-		filename = tkFileDialog.askopenfilename(title=u'select a file')
-		tkMessageBox.showinfo(title=u'your selection is:', message=filename)
-		image = Image.open(filename)
-		self.photoimage = ImageTk.PhotoImage(image) # you must hold this
-		imagelabel = Tk.Label(self, image=self.photoimage,
-				width=image.size[0], height=image.size[1])
-		imagelabel.pack()
-		# }}}
-	# }}}
+    '''main Tk frame'''
+    def __init__(self, options, *av, **ak):
+        Tk.Frame.__init__(self, *av, **ak)
+        self.options = options
+        self.init()
+    def init(self): # {{{2
+        ## root frame
+        self.master.title(u'test title')
+        self.master.geometry('+1400+100')
+        self.master.bind('<KeyPress-Escape>', lambda e: self.master.destroy())
+        ## widgets
+        Tk.Button(self, text='open', command=self.open_file).pack()
+        Tk.Button(self, text='quit', command=self.master.destroy).pack()
+        self.pack()
+        # }}}
+    def open_file(self): # {{{2
+        filename = tkFileDialog.askopenfilename(title=u'select a file')
+        tkMessageBox.showinfo(title=u'your selection is:', message=filename)
+        image = Image.open(filename)
+        self.photoimage = ImageTk.PhotoImage(image) # you must hold this
+        imagelabel = Tk.Label(self, image=self.photoimage,
+                width=image.size[0], height=image.size[1])
+        imagelabel.pack()
+        # }}}
+    # }}}
 
 def gui_main(options):
-	## main frame
-	mainframe = MainFrame(options)
-	mainframe.mainloop()
+    ## main frame
+    mainframe = MainFrame(options)
+    mainframe.mainloop()
 
 def cui_main(options):
-	pass
+    pass
 
 def main(): # {{{1
-	def parse_options():
-		from optparse import OptionParser
-		parser = OptionParser()
-		parser.add_option('-v', '--verbose',
-				action='store_true', dest='verbose', default=False,
-				help='show verbose messages')
-		options, args = parser.parse_args()
-		return options, args
+    def parse_options():
+        from optparse import OptionParser
+        parser = OptionParser()
+        parser.add_option('-v', '--verbose',
+                action='store_true', dest='verbose', default=False,
+                help='show verbose messages')
+        options, args = parser.parse_args()
+        return options, args
 
-	options, args = parse_options()
-	print options
+    options, args = parse_options()
+    print options
 
-	if os.environ.has_key('DISPLAY'):
-		gui_main(options)
-	else:
-		cui_main(options)
-	# }}}
+    if os.environ.has_key('DISPLAY'):
+        gui_main(options)
+    else:
+        cui_main(options)
+    # }}}
 
 if __name__=='__main__':
-	main()
+    main()
 
-# vim: set noet sts=4 ts=4 sw=4 fdm=marker fdl=0:
+# vim: set et sts=4 ts=4 sw=4 fdm=marker fdl=0:
 
