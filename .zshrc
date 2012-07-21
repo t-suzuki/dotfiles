@@ -5,6 +5,7 @@
 # vim:enc=utf8:
 #
 # history:
+#   20120721: Mac OS X Lion上でCPU数を得る(maxmake)
 #   20100908: 指定した名前をもつプロセスをkill -9するkilljobs
 #   20100617: Mac OS X Darwin上で動作するよう修正 (thanks to k.takenaka), 個人設定(~/.zsh_individualrc)
 #   20100217: lsoracceptがOS X(BSD系一般?)で効かない問題に対処 (thanks to K.T)
@@ -131,7 +132,13 @@ alias rm='rm -i'
 alias quit='exit'
 alias ':q'='exit'
 alias w3m='w3m -O ja_JP.UTF-8'
-alias maxmake="make -j$(cat /proc/cpuinfo | grep '^processor' | wc -l)"
+if [ -f /proc/cpuinfo ]; then
+  # Linux
+  alias maxmake="make -j$(cat /proc/cpuinfo | grep '^processor' | wc -l)"
+else
+  # Mac OS X 10.7 (Lion)
+  alias maxmake="make -j$(sysctl -a hw.ncpu | cut -d' ' -f 2)"
+fi
 # 'go'mi = trash (apt-get install trash-cli)
 if exists trash; then
   alias go='trash'
