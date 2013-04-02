@@ -5,6 +5,8 @@
 # vim:enc=utf8:
 #
 # history:
+#   20130402: Mac OS X Mountain LionでCtrl-Yでcdup
+#   20130402: Mac OS X Mountain Lionでjobnum,joblist,ipaddrs
 #   20120721: Mac OS X Lion上でCPU数を得る(maxmake)
 #   20100908: 指定した名前をもつプロセスをkill -9するkilljobs
 #   20100617: Mac OS X Darwin上で動作するよう修正 (thanks to k.takenaka), 個人設定(~/.zsh_individualrc)
@@ -330,7 +332,11 @@ if [ $((${ZSH_VERSION%.*}>=4.3)) -eq 1 ]; then
     zle reset-prompt
   }
   zle -N cdup
-  bindkey '^\^' cdup
+  if [ $(uname) = 'Darwin' ]; then
+    bindkey '^Y' cdup
+  else
+    bindkey '^\^' cdup
+  fi
 
   # directory back on Ctrl-O
   function cdback {
@@ -518,6 +524,12 @@ if [ $TERM = "cygwin" ]; then
   function joblist { ps|awk '/^S/{print gensub(/^.*\/(.*?)$/,"\\1", "", $9);}'|sed ':a;$!N;$!b a;;s/\n/,/g' }
   function jobnum { ps|awk '/^S/{print}'|wc -l}
   function ipaddrs { ipconfig | grep 'IP Address' | sed 's/\. //g;s/.*: //g' | grep -v 127.0.0.1 | sed ':a;$!N;$!b a;;s/\n/, /g' }
+elif [ $(uname) = 'Darwin' ]; then
+  # for Mac OS X
+  function _children { ps -o 'state pid ppid command' | awk '/^T/&&NR!=1&&($3=='$$'){print $4}' }
+  function joblist { _children||sed ':a;$!N;$!b a;;s/\n/,/g' }
+  function jobnum { _children|awk 'END{print NR}'}
+  function ipaddrs { /sbin/ifconfig | awk '/inet /{if("127.0.0.1"!=$2)print $2}' | sed ':a;$!N;$!b a;;s/\n/, /g' }
 else
   # for Linux (procps 3.2.6)
   function joblist { ps -l|awk '/^..T/&&NR!=1{print $14}'|sed ':a;$!N;$!b a;;s/\n/,/g' }
