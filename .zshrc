@@ -527,7 +527,7 @@ if [ $TERM = "cygwin" ]; then
 elif [ $(uname) = 'Darwin' ]; then
   # for Mac OS X
   function _children { ps -o 'state pid ppid command' | awk '/^T/&&NR!=1&&($3=='$$'){print $4}' }
-  function joblist { _children||sed ':a;$!N;$!b a;;s/\n/,/g' }
+  function joblist { _children|sed ':a;$!N;$!b a;;s/\n/,/g' }
   function jobnum { _children|awk 'END{print NR}'}
   function ipaddrs { /sbin/ifconfig | awk '/inet /{if("127.0.0.1"!=$2)print $2}' | sed ':a;$!N;$!b a;;s/\n/, /g' }
 else
