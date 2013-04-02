@@ -41,12 +41,12 @@ if has("syntax")
   augroup END
   endif
 
-  " カレントウィンドウにのみ罫線を引く
+  " cursor line/column in current window
   augroup cch
     autocmd! cch
     autocmd WinLeave * set nocursorcolumn nocursorline
     autocmd WinEnter,BufRead * set cursorcolumn cursorline
-    " PHPで重いので使わない
+    " in php mode, cursor line/column is heavy
     autocmd WinEnter,BufRead *.php set nocursorcolumn nocursorline
   augroup END
 
@@ -97,7 +97,7 @@ set hidden
 set mouse=a
 set ttymouse=xterm2
 
-" 画面最下行の行を出来るだけ表示
+" display the last line
 set display=lastline
 
 " command line, status, title
