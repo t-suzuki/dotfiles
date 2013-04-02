@@ -212,8 +212,8 @@ nnoremap <C-Tab> gt
 " re-visual on search
 vnoremap <silent> gn <ESC>:<C-U>call search(@/)<CR>:<C-U>call search(@/, 'ces')<CR>v``
 vnoremap <silent> gN <ESC>:<C-U>call search(@/, 'b')<CR>:<C-U>call search(@/, 'ces')<CR>v``
-nnoremap <silent> gn :<C-U>call search(@/)<CR>:<C-U>call search(@/, 'ces')<CR>v``
-nnoremap <silent> gN :<C-U>call search(@/, 'b')<CR>:<C-U>call search(@/, 'ces')<CR>v``
+nnoremap <silent> gn :<C-U>call search(@/)<CR>m':<C-U>call search(@/, 'ces')<CR>v``
+nnoremap <silent> gN :<C-U>call search(@/, 'b')<CR>m':<C-U>call search(@/, 'ces')<CR>v``
 nmap     <silent> n  gn<ESC>
 nmap     <silent> N  gN<ESC>
 
