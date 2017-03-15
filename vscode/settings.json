@@ -1,0 +1,16 @@
+// 既定の設定を上書きするには、このファイル内に設定を挿入します
+{
+    // フォント サイズをピクセル単位で制御します。
+    "editor.fontSize": 13,
+
+    "window.zoomLevel": -1,
+    "editor.renderIndentGuides": true,
+    "editor.minimap.enabled": true,
+
+    // vim
+    "vim.scroll": 40,
+    "vim.hlsearch": true,
+
+    // python
+    "python.linting.enabled": false
+}
